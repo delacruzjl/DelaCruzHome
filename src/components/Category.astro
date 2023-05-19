@@ -1,0 +1,15 @@
+---
+export interface Props {
+    name: string
+    count?: number
+    url: string
+}
+
+const { name, count, url } = Astro.props
+
+---
+
+<a href={url} class="is-flex">
+    {name}
+    <small class="ml-auto">({count})</small>
+</a>

@@ -1,15 +1,87 @@
 ---
+import Categories from "../components/Categories.astro";
+import LastestPosts from "../components/LastestPosts.astro";
+import PostResult from "../components/PostResultList.astro";
+import Search from "../components/Search.astro";
+import Tags from "../components/Tags.astro";
+import Layout from "../layouts/Layout.astro";
+
+const posts = [{
+  title: "Elements That You Can Use To Create A New Post On This Template.",
+  url: "/post",
+  date: new Date(),
+  images:  ["/images/post/post-1.jpg", "/images/post/post-2.jpg", "/images/post/post-3.jpg"],
+  categories: [{name: "Lifestyle", url: "/category"}],
+  tags: [{name: "Lifestyle", url: "/tag"}, {name: "Travel", url: "/tag"}, {name: "Food", url: "/tag"}],
+  summary: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non feugiat lacus. Nunc nisi velit, aliquet vitae scelerisque nec, blandit eget mauris. Nullam pharetra lacus non risus suscipit, a malesuada nibh tempor.",
+  author: "admin"
+}, {
+  title: "Elements That You Can Use To Create A New Post On This Template.",
+  url: "/post",
+  date: new Date(),
+  images:  ["/images/post/post-1.jpg", "/images/post/post-2.jpg", "/images/post/post-3.jpg"],
+  categories: [{name: "Lifestyle", url: "/category"}],
+  tags: [{name: "Lifestyle", url: "/tag"}, {name: "Travel", url: "/tag"}, {name: "Food", url: "/tag"}],
+  summary: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non feugiat lacus. Nunc nisi velit, aliquet vitae scelerisque nec, blandit eget mauris. Nullam pharetra lacus non risus suscipit, a malesuada nibh tempor.",
+  author: "admin"
+}]
+
+const rawCategories = posts.map((post) => 
+    post.categories).flat()
+
+const tags = posts.map((post) => 
+    post.tags).flat()
+  .filter((tag, index, self) => 
+    self.findIndex((t) => t.name === tag.name) === index)
+
+const categories: Array<{ name: string, count: number, url: string }> = []
+rawCategories.forEach((category) => {
+  let idx = categories.findIndex((c) => c.name === category.name)
+
+  if (idx >= 0) {
+    categories[idx].count = categories[idx].count + 1 || 1
+  } else {
+    categories.push({name: category.name, count: 1, url: category.url})
+  }
+})
+
+const latest = posts.sort((a, b) => b.date.valueOf() - a.date.valueOf()).slice(0, 3)
+
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<Layout >
+
+  <section class="section">
+    <div class="container">
+      <div class="columns is-desktop is-multiline">
+        <div class="column is-8-desktop">
+          
+          {posts && posts.map(post => (
+            <PostResult 
+              author={post.author}
+              categories={post.categories}
+              postDate={post.date}
+              postSummary={post.summary}
+              tags={post.tags}
+              postUrl={post.url}
+              postTitle={post.title}
+              images={post.images}
+            />
+          ))}
+
+        </div>
+
+        <aside class="column is-4-desktop">
+             <Search />
+
+            <Categories categories={categories} />
+
+            <Tags tags={tags} />
+
+            <LastestPosts posts={latest} />
+        </aside>
+      </div>
+    </div>
+  </section>
+
+</Layout>

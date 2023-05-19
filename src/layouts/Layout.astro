@@ -1,0 +1,64 @@
+---
+import Footer from "../components/Footer.astro";
+import Nav from "../components/Nav.astro";
+
+---
+
+<!DOCTYPE html>
+
+
+<!--
+ // WEBSITE: https://themefisher.com
+ // TWITTER: https://twitter.com/themefisher
+ // FACEBOOK: https://www.facebook.com/themefisher
+ // GITHUB: https://github.com/themefisher/
+-->
+
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <title>Logbook - Homepage</title>
+ 
+    <!-- mobile responsive meta -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
+    <meta name="description" content="This is meta description">
+    <meta name="author" content="Themefisher">
+   
+    <!-- theme meta -->
+    <meta name="theme-name" content="logbook-bulma" />
+ 
+    <!-- plugins -->
+    <link rel="preload" href="https://fonts.gstatic.com/s/opensans/v18/mem8YaGs126MiZpBA-UFWJ0bbck.woff2" style="font-display: optional;">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:600%7cOpen&#43;Sans&amp;display=swap" media="screen">
+ 
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cd-themify-icons@0.0.1/index.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css">
+ 
+    <!-- Main Stylesheet -->
+    <link rel="stylesheet" href="css/style.css">
+ 
+    <!--Favicon-->
+    <link rel="shortcut icon" href="images/favicon.png" type="image/x-icon">
+    <link rel="icon" href="images/favicon.png" type="image/x-icon">
+
+   
+  </head>
+
+  <body>
+    <Nav />
+
+    <slot />
+
+    <Footer />
+
+   
+    <script is:inline src="https://code.jquery.com/jquery-3.7.0.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+    <script is:inline src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js" integrity="sha512-XtmMtDEcNz2j7ekrtHvOVR4iwwaD6o/FUJe6+Zq+HgcCsk3kj4uSQQR8weQ2QVj1o0Pk6PwYLohm206ZzNfubg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+       <!-- Main Script -->
+   <script is:inline src="/js/script.js"></script>
+  </body>
+  
+</html>

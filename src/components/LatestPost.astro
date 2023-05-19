@@ -1,0 +1,26 @@
+---
+export interface Props {
+  title: string;
+  date: Date;
+  image?: string;
+  url: string;
+}
+
+const { title, date, image, url } = Astro.props;
+
+---
+
+<!-- post-item -->
+ <ul class="list-unstyled widget-list">
+    <li class="media widget-post is-align-items-center">
+       <a href={url}>
+          <img loading="lazy" src={image}>
+       </a>
+       <div class="ml-4">
+          <h5 class="h6 mb-0"><a href={url}>
+            {title}    
+        </a></h5>
+          <small>{date.toLocaleDateString()}</small> <!-- March 15, 2020 -->
+       </div>
+    </li>
+ </ul>

@@ -1,0 +1,53 @@
+---
+export interface Props {
+    images?: Array<string>
+    postTitle: string
+    postUrl: string
+    author: string
+    postDate: Date
+    categories: Array<{ name: string, url: string }>
+    tags: Array<{ name: string, url: string }>
+    postSummary: string
+}
+
+const { images, postTitle, postUrl, author, postDate, categories, tags, postSummary } = Astro.props
+
+---
+
+<article class="columns is-multiline is-justify-content-center mb-6">
+    <div class="column is-4-tablet">
+        <div class="post-slider slider-sm">
+      {images && images.map((image) => (
+        
+        <img loading="lazy" src={image} class="" alt="post-thumb" style="height:200px; object-fit: cover;">
+
+      ))}
+
+    </div>
+  </div>
+  
+    <div class="column is-8-tablet">
+        <h3 class="h5">
+            <a class="post-title" 
+            href={postUrl}>
+                {postTitle}
+            </a>
+        </h3>
+
+        <ul class="list-inline post-meta mb-2">
+        <li class="list-inline-item"><i class="ti-user mr-2"></i>
+          <a href="/about.html">{author}</a>
+        </li>
+        <li class="list-inline-item">Date : {postDate.toLocaleString()}</li> <!-- March 14, 2020 -->
+        <li class="list-inline-item">Categories : { categories && categories.map((category) => (<a href={category.url} class="ml-1">{category.name} </a>))}
+        </li>
+        <li class="list-inline-item">Tags : {tags && tags.map((tag, idx) => (<a href={tag.url} class="ml-1">{tag.name} { idx < tags.length && (", ") } </a>))}
+        </li>
+      </ul>
+      
+      <p>{postSummary}</p> 
+      
+      <a href={postUrl} class="btn btn-outline-primary">Continue Reading</a>
+
+    </div>
+  </article>

@@ -1,0 +1,27 @@
+---
+import Category from './Category.astro'
+
+export interface Props {
+      categories: Array<{
+        name: string
+        count?: number
+        url: string
+      }>
+}
+
+const { categories } = Astro.props
+---
+
+<!-- categories -->
+<div class="widget">
+    <h5 class="widget-title"><span>Categories</span></h5>
+    <ul class="list-unstyled widget-list">
+      {categories && categories.map((category) => (
+      <li>
+            <Category name={category.name} 
+                  count={category.count}
+                  url={category.url}  />
+       </li>
+      ))}       
+    </ul>
+ </div>

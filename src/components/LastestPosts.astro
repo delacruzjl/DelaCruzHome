@@ -1,0 +1,29 @@
+---
+import LatestPost from './LatestPost.astro';
+
+export interface Props {
+   posts: Array<{
+      images?: Array<string>,
+      title: string,
+      url: string,
+      date: Date,
+      summary: string
+   }>
+}
+
+const { posts } = Astro.props
+
+---
+
+<!-- latest post -->
+<div class="widget">
+    <h5 class="widget-title"><span>Latest Article</span></h5>
+    
+   {posts && posts.map((post) => ( <LatestPost
+   date={post.date}
+   image={post.images ? post.images[0] : undefined}
+   title={post.title}
+   url={post.url}
+   /> ) )}
+
+ </div>
