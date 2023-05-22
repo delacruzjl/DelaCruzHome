@@ -13,6 +13,7 @@ const { categories } = Astro.props
 ---
 
 <!-- categories -->
+{(categories?.length || 0) === 0 ? null :
 <div class="widget">
     <h5 class="widget-title"><span>Categories</span></h5>
     <ul class="list-unstyled widget-list">
@@ -24,4 +25,4 @@ const { categories } = Astro.props
        </li>
       ))}       
     </ul>
- </div>
+ </div>}

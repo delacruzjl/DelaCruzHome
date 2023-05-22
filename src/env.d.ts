@@ -2,4 +2,4 @@
 
 STORYBLOK_API_BASE_URL: string
 STORYBLOK_TOKEN: string
-AUTHOR: string
+STORYBLOK_AUTHOR: string
