@@ -12,8 +12,13 @@ const env = loadEnv("", process.cwd(), 'STORYBLOK');
 
 // // get from API
 const baseUrl = env.STORYBLOK_API_BASE_URL
-const responseVersion = 'published'
-const pageUrl = `${baseUrl}/stories?token=${env.STORYBLOK_TOKEN}&version=${responseVersion}&filter_query[component][in]=post`;
+
+const apiToken = `token=${env.STORYBLOK_TOKEN}`
+const responseVersion = 'version=published'
+const filterQuery = "filter_query[component][in]=post"
+
+const pageUrl = `${baseUrl}/stories?${apiToken}&${responseVersion}&${filterQuery}`;
+console.log(pageUrl)
 
 const response = await fetch(pageUrl);
 const blok = await response.json();
@@ -32,7 +37,7 @@ const posts = blok?.stories?.sort((a: any, b: any) => a.published_at.valueOf() -
     summary,
     tags: tag.map((tag: any) => ({ name: tag.name, url: `/tag/${tag.name}` })),
     title,
-    url: full_slug,
+    url: `/posts/${full_slug}`,
     content: renderRichText(content)
   };
 });

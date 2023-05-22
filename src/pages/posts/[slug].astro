@@ -1,0 +1,95 @@
+---
+import Layout from "../../layouts/Layout.astro"
+import { loadEnv } from 'vite';
+import { renderRichText } from '@storyblok/astro';
+
+export async function getStaticPaths() {
+    
+const env = loadEnv("", process.cwd(), 'STORYBLOK');
+
+// // get from API
+const baseUrl = env.STORYBLOK_API_BASE_URL
+
+const apiToken = `token=${env.STORYBLOK_TOKEN}`
+const responseVersion = 'version=published'
+const filterQuery = "filter_query[component][in]=post"
+
+const pageUrl = `${baseUrl}/stories?${apiToken}&${responseVersion}&${filterQuery}`;
+
+const postsResponse = await fetch(pageUrl);
+const posts = await postsResponse.json();
+
+const items: Array<any> = posts?.stories?.map((json: any) => { 
+    return {
+        slug: json.slug,
+        title: json.content?.title,
+        content: renderRichText(json.content?.content),
+        date: new Date(json.published_at).toLocaleDateString(),
+        images: json.content?.images,
+        author: env.STORYBLOK_AUTHOR,
+        categories: json.content?.categories?.map((category: any) => category.name),
+        tags: json.content?.tag?.map((tag: any) => tag.name)
+    };
+});
+
+  const pages = items.map((item) => ({
+    params: { slug: item.slug },
+    props: {
+      title: item.title,
+      content: item.content,
+      date: new Date(item.date).toLocaleDateString(),
+      images: item.images,
+      author: item.author,
+      categories: item.categories,
+      tags: item.tags
+    },
+  }));
+
+  return pages;
+}
+
+const { content, title, date, images, author, categories,tags } = Astro.props;
+
+---
+
+<Layout >
+    <section class="section">
+        <div class="container">
+            <article class="columns is-multiline mb-5 is-justify-content-center">
+                <div class="column is-10-desktop mb-4">
+                    <h1 class="h2 mb-3">{title}</h1>
+
+                    <ul class="list-inline post-meta mb-3">
+                        <li class="list-inline-item"><i class="ti-user mr-2"></i>
+                            <a href="author.html">{author}</a>
+                        </li>
+                        <li class="list-inline-item">Date : {date}</li>
+                        <li class="list-inline-item">Categories : 
+                            {categories && categories.map((cat: any, idx: number) => (
+                                <a href="/categories/{cat}" class="ml-1">
+                                    {idx > 0 && categories.length > 1 && ', '} {cat} 
+                                </a>
+                            ))}
+                        </li>
+                        <li class="list-inline-item">Tags : 
+                            {tags && tags.map((tag: any, idx: number) => (
+                                <a href="/tags/{tag}" class="ml-1">
+                                    {idx > 0 && tag.length > 1 && ', '} {tag} 
+                                </a> 
+                            ))}                            
+                        </li>
+                    </ul>
+                </div>
+                <div class="column is-12 mb-3">
+                    <div class="post-slider">
+                        <img src={images[0].filename} class="" style="max-height: 318px" alt="post-thumb">
+                    </div>
+                </div>
+                <div class="column is-10-desktop">
+                    <div class="content" set:html={content}>
+                    </div>
+                </div>
+            </article>
+        </div>
+    </section>
+</Layout>
