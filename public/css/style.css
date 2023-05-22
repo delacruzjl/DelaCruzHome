@@ -21,6 +21,8 @@ body {
   -webkit-font-smoothing: antialiased;
   color: #696c6d;
   font-size: 14px;
+  background-color: #fff;
+  overflow-x: hidden;
 }
 
 p, .paragraph {
@@ -111,11 +113,6 @@ h6, .h6 {
 .btn-outline-light:active, .btn-outline-light:hover, .btn-outline-light.focus, .btn-outline-light.active {
   background: #f0f0f0 !important;
   border-color: #ddd !important;
-}
-
-body {
-  background-color: #fff;
-  overflow-x: hidden;
 }
 
 ::-moz-selection {
@@ -392,9 +389,7 @@ a:hover {
   border: 1px solid #dee2e6 !important;
 }
 
-.border-default {
-  border-color: #ddd !important;
-}
+
 
 .border-top {
   border-top: 1px solid #dee2e6 !important;
@@ -516,7 +511,7 @@ a:hover {
   border: 0;
   top: 50px;
   left: 0px;
-  border-radius: 0;
+  /* border-radius: 0; */
   display: block;
   visibility: hidden;
   transition: 0.3s ease;
@@ -853,7 +848,7 @@ a:hover {
   position: absolute;
   top: 2px;
   color: #fff;
-  font-family: "themify";
+  font-family: "themify", sans-serif;
   font-weight: 900;
   content: "\e717";
   left: 10px;
