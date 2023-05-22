@@ -13,18 +13,19 @@ const env = loadEnv("", process.cwd(), 'STORYBLOK');
 // // get from API
 const baseUrl = env.STORYBLOK_API_BASE_URL
 const responseVersion = 'published'
-const pageUrl = `${baseUrl}?token=${env.STORYBLOK_TOKEN}&version=${responseVersion}&filter_query[component][in]=post`;
+const pageUrl = `${baseUrl}/stories?token=${env.STORYBLOK_TOKEN}&version=${responseVersion}&filter_query[component][in]=post`;
 
 const response = await fetch(pageUrl);
 const blok = await response.json();
 
-const posts = blok.stories.map((story: any) => {
+const posts = blok?.stories?.sort((a: any, b: any) => a.published_at.valueOf() - b.published_at.valueOf())
+.map((story: any) => {
   const { published_at, full_slug } = story;
   const content_data = story.content;
   const { categories, images, summary, tag, title, content } = content_data;
 
   return {
-    author: env.AUTHOR,
+    author: env.STORYBLOK_AUTHOR,
     categories: categories.map((cat: any) => ({ name: cat.name, url: `/category/${cat.name}` })),
     date: new Date(published_at),
     images: images.map((image: any) => image.filename),
@@ -36,16 +37,11 @@ const posts = blok.stories.map((story: any) => {
   };
 });
 
-const rawCategories = posts.map((post: any) => 
+const rawCategories = posts?.map((post: any) => 
     post.categories).flat()
 
-const tags = posts.map((post: any) => 
-    post.tags).flat()
-  .filter((tag: any, index: number, self: any) => 
-    self.findIndex((t: any) => t.name === tag.name) === index)
-
-const categories: Array<{ name: string, count: number, url: string }> = []
-rawCategories.forEach((category: any) => {
+const categories: Array<{ name: string, count: number, url: string }> = [] 
+rawCategories?.forEach((category: any) => {
   let idx = categories.findIndex((c) => c.name === category.name)
 
   if (idx >= 0) {
@@ -55,18 +51,22 @@ rawCategories.forEach((category: any) => {
   }
 })
 
-const latest = posts.sort((a: any, b: any) => b.date.valueOf() - a.date.valueOf()).slice(0, 3)
+const tags = posts?.map((post: any) => 
+    post.tags).flat()
+  .filter((tag: any, index: number, self: any) => 
+    self.findIndex((t: any) => t.name === tag.name) === index)
+
+const latest = posts?.sort((a: any, b: any) => b.date.valueOf() - a.date.valueOf()).slice(0, 3)
 
 ---
 
 <Layout >
-
   <section class="section">
     <div class="container">
       <div class="columns is-desktop is-multiline">
         <div class="column is-8-desktop">
           
-          {posts && posts.map((post: any) => (
+          {posts && posts?.map((post: any) => (
             <PostResult 
               author={post.author}
               categories={post.categories}
@@ -84,11 +84,12 @@ const latest = posts.sort((a: any, b: any) => b.date.valueOf() - a.date.valueOf(
         <aside class="column is-4-desktop">
              <Search />
 
-            <Categories categories={categories} />
+             {categories && <Categories categories={categories} />}
+            
 
-            <Tags tags={tags} />
+            {tags && <Tags tags={tags} />}
 
-            <LastestPosts posts={latest} />
+            {latest && <LastestPosts posts={latest} />}
         </aside>
       </div>
     </div>
