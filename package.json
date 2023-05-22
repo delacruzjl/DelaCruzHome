@@ -10,6 +10,11 @@
     "astro": "astro"
   },
   "dependencies": {
-    "astro": "^2.4.1"
+    "@storyblok/astro": "^2.3.1",
+    "astro": "^2.4.1",
+    "vite": "^4.3.8"
+  },
+  "devDependencies": {
+    "@types/node": "^20.2.3"
   }
 }

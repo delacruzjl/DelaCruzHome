@@ -1,4 +1,6 @@
 ---
+import { loadEnv } from 'vite';
+import { renderRichText } from '@storyblok/astro';
 import Categories from "../components/Categories.astro";
 import LastestPosts from "../components/LastestPosts.astro";
 import PostResult from "../components/PostResultList.astro";
@@ -6,36 +8,44 @@ import Search from "../components/Search.astro";
 import Tags from "../components/Tags.astro";
 import Layout from "../layouts/Layout.astro";
 
-const posts = [{
-  title: "Elements That You Can Use To Create A New Post On This Template.",
-  url: "/post",
-  date: new Date(),
-  images:  ["/images/post/post-1.jpg", "/images/post/post-2.jpg", "/images/post/post-3.jpg"],
-  categories: [{name: "Lifestyle", url: "/category"}],
-  tags: [{name: "Lifestyle", url: "/tag"}, {name: "Travel", url: "/tag"}, {name: "Food", url: "/tag"}],
-  summary: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non feugiat lacus. Nunc nisi velit, aliquet vitae scelerisque nec, blandit eget mauris. Nullam pharetra lacus non risus suscipit, a malesuada nibh tempor.",
-  author: "admin"
-}, {
-  title: "Elements That You Can Use To Create A New Post On This Template.",
-  url: "/post",
-  date: new Date(),
-  images:  ["/images/post/post-1.jpg", "/images/post/post-2.jpg", "/images/post/post-3.jpg"],
-  categories: [{name: "Lifestyle", url: "/category"}],
-  tags: [{name: "Lifestyle", url: "/tag"}, {name: "Travel", url: "/tag"}, {name: "Food", url: "/tag"}],
-  summary: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non feugiat lacus. Nunc nisi velit, aliquet vitae scelerisque nec, blandit eget mauris. Nullam pharetra lacus non risus suscipit, a malesuada nibh tempor.",
-  author: "admin"
-}]
+const env = loadEnv("", process.cwd(), 'STORYBLOK');
 
-const rawCategories = posts.map((post) => 
+// // get from API
+const baseUrl = env.STORYBLOK_API_BASE_URL
+const responseVersion = 'published'
+const pageUrl = `${baseUrl}?token=${env.STORYBLOK_TOKEN}&version=${responseVersion}&filter_query[component][in]=post`;
+
+const response = await fetch(pageUrl);
+const blok = await response.json();
+
+const posts = blok.stories.map((story: any) => {
+  const { published_at, full_slug } = story;
+  const content_data = story.content;
+  const { categories, images, summary, tag, title, content } = content_data;
+
+  return {
+    author: env.AUTHOR,
+    categories: categories.map((cat: any) => ({ name: cat.name, url: `/category/${cat.name}` })),
+    date: new Date(published_at),
+    images: images.map((image: any) => image.filename),
+    summary,
+    tags: tag.map((tag: any) => ({ name: tag.name, url: `/tag/${tag.name}` })),
+    title,
+    url: full_slug,
+    content: renderRichText(content)
+  };
+});
+
+const rawCategories = posts.map((post: any) => 
     post.categories).flat()
 
-const tags = posts.map((post) => 
+const tags = posts.map((post: any) => 
     post.tags).flat()
-  .filter((tag, index, self) => 
-    self.findIndex((t) => t.name === tag.name) === index)
+  .filter((tag: any, index: number, self: any) => 
+    self.findIndex((t: any) => t.name === tag.name) === index)
 
 const categories: Array<{ name: string, count: number, url: string }> = []
-rawCategories.forEach((category) => {
+rawCategories.forEach((category: any) => {
   let idx = categories.findIndex((c) => c.name === category.name)
 
   if (idx >= 0) {
@@ -45,7 +55,7 @@ rawCategories.forEach((category) => {
   }
 })
 
-const latest = posts.sort((a, b) => b.date.valueOf() - a.date.valueOf()).slice(0, 3)
+const latest = posts.sort((a: any, b: any) => b.date.valueOf() - a.date.valueOf()).slice(0, 3)
 
 ---
 
@@ -56,7 +66,7 @@ const latest = posts.sort((a, b) => b.date.valueOf() - a.date.valueOf()).slice(0
       <div class="columns is-desktop is-multiline">
         <div class="column is-8-desktop">
           
-          {posts && posts.map(post => (
+          {posts && posts.map((post: any) => (
             <PostResult 
               author={post.author}
               categories={post.categories}
