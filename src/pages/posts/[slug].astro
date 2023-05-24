@@ -20,6 +20,9 @@ const postsResponse = await fetch(pageUrl);
 const posts = await postsResponse.json();
 
 const items: Array<any> = posts?.stories?.map((json: any) => { 
+
+    console.log(json.content?.categories)
+
     return {
         slug: json.slug,
         title: json.content?.title,
@@ -80,11 +83,11 @@ const { content, title, date, images, author, categories,tags } = Astro.props;
                         </li>
                     </ul>
                 </div>
-                <div class="column is-12 mb-3">
+                {images && images.length > 0 && <div class="column is-12 mb-3">
                     <div class="post-slider">
                         <img src={images[0].filename} class="" style="max-height: 318px" alt="post-thumb">
                     </div>
-                </div>
+                </div>}
                 <div class="column is-10-desktop">
                     <div class="content" set:html={content}>
                     </div>
