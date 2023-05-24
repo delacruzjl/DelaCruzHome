@@ -18,8 +18,6 @@ const responseVersion = 'version=published'
 const filterQuery = "filter_query[component][in]=post"
 
 const pageUrl = `${baseUrl}/stories?${apiToken}&${responseVersion}&${filterQuery}`;
-console.log(pageUrl)
-
 const response = await fetch(pageUrl);
 const blok = await response.json();
 
@@ -37,7 +35,7 @@ const posts = blok?.stories?.sort((a: any, b: any) => a.published_at.valueOf() -
     summary,
     tags: tag.map((tag: any) => ({ name: tag.name, url: `/tag/${tag.name}` })),
     title,
-    url: `/posts/${full_slug}`,
+    url: `/posts/${full_slug}.html`,
     content: renderRichText(content)
   };
 });
@@ -69,6 +67,7 @@ const latest = posts?.sort((a: any, b: any) => b.date.valueOf() - a.date.valueOf
   <section class="section">
     <div class="container">
       <div class="columns is-desktop is-multiline">
+
         <div class="column is-8-desktop">
           
           {posts && posts?.map((post: any) => (
@@ -89,8 +88,7 @@ const latest = posts?.sort((a: any, b: any) => b.date.valueOf() - a.date.valueOf
         <aside class="column is-4-desktop">
              <Search />
 
-             {categories && <Categories categories={categories} />}
-            
+             {categories && <Categories categories={categories} />}            
 
             {tags && <Tags tags={tags} />}
 
