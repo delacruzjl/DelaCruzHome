@@ -4,7 +4,7 @@ import { renderRichText } from '@storyblok/astro';
 import Categories from "../components/Categories.astro";
 import LastestPosts from "../components/LastestPosts.astro";
 import PostResult from "../components/PostResultFull.astro";
-import Search from "../components/Search.astro";
+import Search from "../components/Search.tsx";
 import Tags from "../components/Tags.astro";
 import Layout from "../layouts/Layout.astro";
 
@@ -18,6 +18,9 @@ const responseVersion = 'version=published'
 const filterQuery = "filter_query[component][in]=post"
 
 const pageUrl = `${baseUrl}/stories?${apiToken}&${responseVersion}&${filterQuery}`;
+
+
+
 const response = await fetch(pageUrl);
 const blok = await response.json();
 
@@ -35,7 +38,7 @@ const posts = blok?.stories?.sort((a: any, b: any) => a.published_at.valueOf() -
     summary,
     tags: tag.map((tag: any) => ({ name: tag.name, url: `/tag/${tag.name}` })),
     title,
-    url: `/posts/${full_slug}.html`,
+    url: `/posts/${full_slug}`,
     content: renderRichText(content)
   };
 });
@@ -64,12 +67,13 @@ const latest = posts?.sort((a: any, b: any) => b.date.valueOf() - a.date.valueOf
 ---
 
 <Layout >
+  
+
   <section class="section">
     <div class="container">
       <div class="columns is-desktop is-multiline">
-
         <div class="column is-8-desktop">
-          
+          <div id="search" class="ml-3 p-4 -mt-8">  </div>
           {posts && posts?.map((post: any) => (
             <PostResult 
               author={post.author}
@@ -82,20 +86,45 @@ const latest = posts?.sort((a: any, b: any) => b.date.valueOf() - a.date.valueOf
               images={post.images}
             />
           ))}
-
         </div>
 
         <aside class="column is-4-desktop">
-             <Search />
+          <!-- <Search client:visible /> -->
 
-             {categories && <Categories categories={categories} />}            
+          {categories && <Categories categories={categories} />}            
 
-            {tags && <Tags tags={tags} />}
+        {tags && <Tags tags={tags} />}
 
-            {latest && <LastestPosts posts={latest} />}
-        </aside>
-      </div>
+        {latest && <LastestPosts posts={latest} />}
+    </aside>
+      </div>      
     </div>
+    
   </section>
 
 </Layout>
+
+
+<script>
+	window.addEventListener('DOMContentLoaded', (event) => {
+	  new PagefindUI({ element: '#search', resetStyles: false});
+	});
+
+    window.addEventListener('keydown', (event) => {
+        if (event.key === '/' || event.key === '.') {
+            console.log('you pressed the slash');
+            event.preventDefault();
+            document.querySelector('div#search input').focus();
+        }
+    });
+</script>
+
+<style is:global>
+	.dark {
+		--pagefind-ui-primary: #eeeeee;
+		--pagefind-ui-text: #eeeeee;
+		--pagefind-ui-background: #152028;
+		--pagefind-ui-border: #152028;
+		--pagefind-ui-tag: #152028;
+	}
+</style>

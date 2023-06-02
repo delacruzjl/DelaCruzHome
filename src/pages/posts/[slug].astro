@@ -21,8 +21,6 @@ const posts = await postsResponse.json();
 
 const items: Array<any> = posts?.stories?.map((json: any) => { 
 
-    console.log(json.content?.categories)
-
     return {
         slug: json.slug,
         title: json.content?.title,
@@ -64,7 +62,7 @@ const { content, title, date, images, author, categories,tags } = Astro.props;
 
                     <ul class="list-inline post-meta mb-3">
                         <li class="list-inline-item"><i class="ti-user mr-2"></i>
-                            <a href="author.html">{author}</a>
+                            <a href="/author">{author}</a>
                         </li>
                         <li class="list-inline-item">Date : {date}</li>
                         <li class="list-inline-item">Categories : 

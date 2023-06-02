@@ -6,15 +6,22 @@
     "dev": "astro dev",
     "start": "astro dev",
     "build": "astro build",
+    "postbuild": "pagefind --source dist/",
     "preview": "astro preview",
     "astro": "astro"
   },
   "dependencies": {
+    "@astrojs/react": "^2.2.0",
     "@storyblok/astro": "^2.3.1",
+    "@types/react": "^18.2.7",
+    "@types/react-dom": "^18.2.4",
     "astro": "^2.4.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
     "vite": "^4.3.8"
   },
   "devDependencies": {
-    "@types/node": "^20.2.3"
+    "@types/node": "^20.2.3",
+    "pagefind": "^0.12.0"
   }
 }

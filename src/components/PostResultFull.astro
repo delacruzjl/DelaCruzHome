@@ -36,7 +36,7 @@ const { images, postTitle, postUrl, author, postDate, categories, tags, postSumm
 
       <ul class="list-inline post-meta mb-4">
         <li class="list-inline-item"><i class="ti-user mr-2"></i>
-          <a href="/about.html">{author}</a>
+          <a href="/about">{author}</a>
         </li>
         <li class="list-inline-item">Date : {postDate.toLocaleString()}</li> <!-- March 14, 2020 -->
         <li class="list-inline-item">Categories : { categories && categories.map((category) => (<a href={category.url} class="ml-1">{category.name} </a>))}
