@@ -18,8 +18,6 @@ const filterQuery = "filter_query[component][in]=post"
 
 const pageUrl = `${baseUrl}/stories?${apiToken}&${responseVersion}&${filterQuery}`;
 
-
-
 const response = await fetch(pageUrl);
 const blok = await response.json();
 

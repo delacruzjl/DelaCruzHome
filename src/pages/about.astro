@@ -1,6 +1,26 @@
 ---
+import { loadEnv } from 'vite';
 import BorderedTitle from "../components/BorderedTitle.astro";
 import Layout from "../layouts/Layout.astro";
+import { renderRichText } from '@storyblok/astro';
+
+const env = loadEnv("", process.cwd(), 'STORYBLOK');
+
+// // get from API
+const baseUrl = env.STORYBLOK_API_BASE_URL
+
+const apiToken = `token=${env.STORYBLOK_TOKEN}`
+const responseVersion = 'version=published'
+
+const pageUrl = `${baseUrl}/stories/about?${apiToken}&${responseVersion}`;
+console.log(pageUrl);
+
+const response = await fetch(pageUrl);
+const blok = await response.json();
+const { published_at, full_slug } = blok.story;
+const content_data = blok.story.content;
+const { title, summary, content } = content_data;
+const htmlContent = renderRichText(content)
 
 ---
 
@@ -12,24 +32,8 @@ import Layout from "../layouts/Layout.astro";
 			<div class="column is-12">
 				<BorderedTitle title="Hello, I am Jose" />
 				<img src="https://a-us.storyblok.com/f/1014356/1299x601/35b770cdbe/header-bg.jpg/m/650x0/smart" class="w-100 mb-4 rounded-lg" alt="author">
-				<div class="content">
-					<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Condimentum in urna justo elit turpis risus vitae viverra enim. Augue quis vitae in non nisi, posuere ultrices tempus. Feugiat consequat suspendisse laoreet vitae enim adipiscing cursus. Duis nunc vitae tincidunt sed nibh id. Egestas erat consequat, ornare etiam donec faucibus. Lorem ut enim nunc, senectus adipiscing sed. Lobortis commodo aliquet pulvinar molestie faucibus diam. Semper porttitor justo, et dictum</p>
-					<p>Faucibus duis urna, consequat morbi imperdiet pulvinar. Mauris vitae sed aliquet eu tincidunt id. Nulla leo eget erat vel pharetra. Morbi nullam morbi non purus, augue. Massa cras odio ante cursus a mauris. Volutpat faucibus feugiat feugiat euismod congue ridiculus. Et ipsum euismod nulla et aenean diam duis. Sem molestie est mauris sit. Et eleifend odio</p>
-					<div class="quote"> <i class="ti-quote-left"></i>
-						<div>
-							<p>Life is a series of natural and spontaneous changes. Don’t resist them – that only create sorcolumns is-multiline. Let reality changes be reality. Let things flow naturally way they like.</p> <span class="quote-by"> -John Doe</span>
-						</div>
-					</div>
-					<hr>
-					<h4 id="my-skills--experiences">My Skills &amp; Experiences:</h4>
-					<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cumto sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec.</p>
-					<ul>
-						<li>In enim justo, rhoncus ut,</li>
-						<li>Curabitur ullamcorper ultricies</li>
-						<li>Donec vitae sapien utlorem</li>
-					</ul>
-					<p>Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem. Maecenas nec odio et ante tincidunt tempus. Donec vitae sapien ut libero venenatis faucibus. Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna.</p>
-				</div>
+				<div class="content" set:html={htmlContent} >
+					
 			</div>
 		</div>
 	</div>
