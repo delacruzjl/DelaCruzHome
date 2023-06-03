@@ -13,9 +13,9 @@ const { title, date, image, url } = Astro.props;
 <!-- post-item -->
  <ul class="list-unstyled widget-list">
     <li class="media widget-post is-align-items-center">
-       <a href={url}>
-          <img loading="lazy" src={image}>
-       </a>
+       {image && <a href={url}>
+          <img loading="lazy" src={`${image}/m/fit-in/60x60/filters:fill(CCCCCC)`} alt={title}>
+       </a>}
        <div class="ml-4">
           <h5 class="h6 mb-0"><a href={url}>
             {title}    

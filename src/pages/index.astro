@@ -4,7 +4,6 @@ import { renderRichText } from '@storyblok/astro';
 import Categories from "../components/Categories.astro";
 import LastestPosts from "../components/LastestPosts.astro";
 import PostResult from "../components/PostResultFull.astro";
-import Search from "../components/Search.tsx";
 import Tags from "../components/Tags.astro";
 import Layout from "../layouts/Layout.astro";
 
@@ -106,15 +105,17 @@ const latest = posts?.sort((a: any, b: any) => b.date.valueOf() - a.date.valueOf
 
 
 <script>
+  declare var PagefindUI: any;
+
 	window.addEventListener('DOMContentLoaded', (event) => {
 	  new PagefindUI({ element: '#search', resetStyles: false});
 	});
 
     window.addEventListener('keydown', (event) => {
-        if (event.key === '/' || event.key === '.') {
+        if (event.key === '/') {
             console.log('you pressed the slash');
             event.preventDefault();
-            document.querySelector('div#search input').focus();
+            (document.querySelector('div#search input') as HTMLInputElement).focus();
         }
     });
 </script>

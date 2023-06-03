@@ -1,3 +1,7 @@
+---
+import Newsletter from '../components/Newsletter'
+
+---
 <footer class="section-sm pb-0 border-top border-default">
     <div class="container">
        <div class="columns is-multiline is-justify-content-space-between">
@@ -28,16 +32,7 @@
              </ul>
           </div>
 
-          <div class="column is-3-desktop">
-             <h6 class="mb-4">Subscribe Newsletter</h6>
-             <form class="subscription" action="javascript:void(0)" method="post">
-                <div class="is-relative">
-                   <i class="ti-email email-icon"></i>
-                   <input type="email" class="input" placeholder="Your Email Address">
-                </div>
-                <button class="btn btn-primary w-100 rounded mt-2" type="submit">Subscribe now</button>
-             </form>
-          </div>
+          <Newsletter />
        </div>
        <div class="scroll-top">
           <a href="javascript:void(0);" id="scrollTop"><i class="ti-angle-up"></i></a>

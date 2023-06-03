@@ -83,7 +83,7 @@ const { content, title, date, images, author, categories,tags } = Astro.props;
                 </div>
                 {images && images.length > 0 && <div class="column is-12 mb-3">
                     <div class="post-slider">
-                        <img src={images[0].filename} class="" style="max-height: 318px" alt="post-thumb">
+                        <img src={`${images[0].filename}/m/600x0/filters:fill(CCCCCC)`} class="" style="max-height: 318px; max-width: 600px;" alt="post-thumb">
                     </div>
                 </div>}
                 <div class="column is-10-desktop">

@@ -7,6 +7,7 @@ const env = loadEnv("", process.cwd(), 'STORYBLOK');
 
 // https://astro.build/config
 export default defineConfig({
+  compressHTML: true,
   integrations: [react(), storyblok({
     accessToken: env.STORYBLOK_TOKEN,
     apiOptions: {
