@@ -1,0 +1,22 @@
+---
+export interface Props {
+    title: string
+}
+
+const { title } = Astro.props
+
+---
+
+<div class="title-bordered mb-5 is-flex is-align-items-center">
+    <h1 class="h4">{title}</h1>
+    <ul class="list-inline social-icons ml-auto mr-3 is-hidden-mobile">
+        <li class="list-inline-item"><a href="https://www.facebook.com/delacruzjl"><i class="ti-facebook"></i></a>
+        </li>
+        <li class="list-inline-item"><a href="https://twitter.com/delacruzjl"><i class="ti-twitter-alt"></i></a>
+        </li>
+        <li class="list-inline-item"><a href="https://www.linkedin.com/in/joseldelacruz/"><i class="ti-linkedin"></i></a>
+        </li>
+        <li class="list-inline-item"><a href="https://github.com/delacruzjl"><i class="ti-github"></i></a>
+        </li>
+    </ul>
+</div>
