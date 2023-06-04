@@ -35,7 +35,7 @@ const posts = blok?.stories?.sort((a: any, b: any) => a.published_at.valueOf() -
     summary,
     tags: tag_list.map((tag: any) => ({ name: tag, url: `/tag/${tag}` })),
     title,
-    url: `/posts/${full_slug}`,
+    url: `/post/${full_slug}`,
     content: renderRichText(content)
   };
 });

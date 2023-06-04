@@ -48,7 +48,7 @@ export async function getStaticPaths({}) {
         categories: item.categories || [],
         tags: item.tags.map((tag: any) => tag?.toLowerCase()) || [],
         summary: item.summary,
-        url: `/posts/${item.slug}`
+        url: `/post/${item.slug}`
     }});
 
     const allTags = new Set()
