@@ -3,6 +3,7 @@ import Layout from "../../layouts/Layout.astro";
 import { loadEnv } from 'vite';
 import { renderRichText } from '@storyblok/astro';
 import PostResult from "../../components/PostResultList.astro";
+import BorderedTitle from "../../components/BorderedTitle.astro";
 
 export async function getStaticPaths({}) {
 
@@ -46,7 +47,8 @@ export async function getStaticPaths({}) {
         author: item.author,
         categories: item.categories || [],
         tags: item.tags.map((tag: any) => tag?.toLowerCase()) || [],
-        summary: item.summary
+        summary: item.summary,
+        url: `/posts/${item.slug}`
     }});
 
     const allTags = new Set()
@@ -69,12 +71,20 @@ export async function getStaticPaths({}) {
   });
 }
 
-const { pages } = Astro.props // pages prop passed in `getStaticPaths`
+const {  pages } = Astro.props // pages prop passed in `getStaticPaths`
+
+const pageTitle = `Tag: ${Astro.params["slug"]}`
 ---
 
 <Layout>
-    <div class="column is-8-desktop">
-        <div id="search" class="ml-3 p-4 -mt-8">  </div>
+
+  <section class="section-sm">
+    <div class="container">
+      <div class="columns is-multiline">
+        <div class="column is-12">
+
+  <BorderedTitle title={pageTitle} />
+
         {pages && pages?.map((post: any) => (
           <PostResult 
             author={post.author}
@@ -87,5 +97,9 @@ const { pages } = Astro.props // pages prop passed in `getStaticPaths`
             images={post.images}
           />
         ))}
-      </div>
+
+    </div>
+  </div>
+</div>
+</section>
 </Layout>

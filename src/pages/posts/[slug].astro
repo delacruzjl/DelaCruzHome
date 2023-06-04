@@ -66,14 +66,14 @@ const { content, title, date, images, author, categories,tags } = Astro.props;
                         <li class="list-inline-item">Date : {date}</li>
                         <li class="list-inline-item">Categories : 
                             {categories && categories.map((cat: any, idx: number) => (
-                                <a href="/categories/{cat}" class="ml-1">
+                                <a href={`/category/${cat.toLowerCase()}`} class="ml-1">
                                     {idx > 0 && categories.length > 1 && ', '} {cat} 
                                 </a>
                             ))}
                         </li>
                         <li class="list-inline-item">Tags : 
                             {tags && tags.map((tag: any, idx: number) => (
-                                <a href="/tags/{tag}" class="ml-1">
+                                <a href={`/tag/${tag.toLowerCase()}`} class="ml-1">
                                     {idx > 0 && tag.length > 1 && ', '} {tag} 
                                 </a> 
                             ))}                            
