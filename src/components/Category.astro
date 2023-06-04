@@ -9,7 +9,7 @@ const { name, count, url } = Astro.props
 
 ---
 
-<a href={url} class="is-flex">
+<a href={url?.toLowerCase()} class="is-flex">
     {name}
     <small class="ml-auto">({count})</small>
 </a>

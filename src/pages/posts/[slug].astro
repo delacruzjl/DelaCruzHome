@@ -5,48 +5,47 @@ import { renderRichText } from '@storyblok/astro';
 
 export async function getStaticPaths() {
     
-const env = loadEnv("", process.cwd(), 'STORYBLOK');
+    const env = loadEnv("", process.cwd(), 'STORYBLOK');
 
-// // get from API
-const baseUrl = env.STORYBLOK_API_BASE_URL
+    // // get from API
+    const baseUrl = env.STORYBLOK_API_BASE_URL
 
-const apiToken = `token=${env.STORYBLOK_TOKEN}`
-const responseVersion = 'version=published'
-const filterQuery = "filter_query[component][in]=post"
+    const apiToken = `token=${env.STORYBLOK_TOKEN}`
+    const responseVersion = 'version=published'
+    const filterQuery = "filter_query[component][in]=post"
 
-const pageUrl = `${baseUrl}/stories?${apiToken}&${responseVersion}&${filterQuery}`;
+    const pageUrl = `${baseUrl}/stories?${apiToken}&${responseVersion}&${filterQuery}`;
 
-const postsResponse = await fetch(pageUrl);
-const posts = await postsResponse.json();
+    const postsResponse = await fetch(pageUrl);
+    const posts = await postsResponse.json();
 
-const items: Array<any> = posts?.stories?.map((json: any) => { 
+    const items: Array<any> = posts?.stories?.map((json: any) => { 
+        return {
+            slug: json.slug,
+            title: json.content?.title,
+            content: renderRichText(json.content?.content),
+            date: new Date(json.published_at).toLocaleDateString(),
+            images: json.content?.images,
+            author: env.STORYBLOK_AUTHOR,
+            categories: json.content?.categories?.map((category: any) => category.name),
+            tags: json.tag_list || []
+        };
+    });
 
-    return {
-        slug: json.slug,
-        title: json.content?.title,
-        content: renderRichText(json.content?.content),
-        date: new Date(json.published_at).toLocaleDateString(),
-        images: json.content?.images,
-        author: env.STORYBLOK_AUTHOR,
-        categories: json.content?.categories?.map((category: any) => category.name),
-        tags: json.content?.tag?.map((tag: any) => tag.name)
-    };
-});
+    const pages = items.map((item) => ({
+        params: { slug: item.slug },
+        props: {
+        title: item.title,
+        content: item.content,
+        date: new Date(item.date).toLocaleDateString(),
+        images: item.images,
+        author: item.author,
+        categories: item.categories,
+        tags: item.tags
+        },
+    }));
 
-  const pages = items.map((item) => ({
-    params: { slug: item.slug },
-    props: {
-      title: item.title,
-      content: item.content,
-      date: new Date(item.date).toLocaleDateString(),
-      images: item.images,
-      author: item.author,
-      categories: item.categories,
-      tags: item.tags
-    },
-  }));
-
-  return pages;
+    return pages;
 }
 
 const { content, title, date, images, author, categories,tags } = Astro.props;

@@ -1,9 +1,91 @@
 ---
 import Layout from "../../layouts/Layout.astro";
+import { loadEnv } from 'vite';
+import { renderRichText } from '@storyblok/astro';
+import PostResult from "../../components/PostResultList.astro";
 
+export async function getStaticPaths({}) {
+
+    const env = loadEnv("", process.cwd(), 'STORYBLOK');
+
+    // // get from API
+    const baseUrl = env.STORYBLOK_API_BASE_URL
+
+    const apiToken = `token=${env.STORYBLOK_TOKEN}`
+    const responseVersion = 'version=published'
+    const filterQuery = "filter_query[component][in]=post"
+
+    const pageUrl = `${baseUrl}/stories?${apiToken}&${responseVersion}&${filterQuery}`;
+
+    const postsResponse = await fetch(pageUrl);
+    const posts = await postsResponse.json();
+
+    const items: Array<any> = posts?.stories?.map((json: any) => { 
+        const content_data = json.content;
+        const {  summary, images } = content_data;
+
+        return {
+            slug: json.slug,
+            title: json.content?.title,
+            content: renderRichText(json.content?.content),
+            date: new Date(json.published_at).toLocaleDateString(),
+            images:  images.map((image: any) => image.filename),
+            author: env.STORYBLOK_AUTHOR,
+            categories: json.content?.categories?.map((category: any) => category?.name) || [],
+            tags: json.tag_list || [],
+            summary
+        };
+    });
+
+    const pages = items.map((item) =>  {return {
+
+        title: item.title,
+        content: item.content,
+        date: new Date(item.date).toLocaleDateString(),
+        images: item.images,
+        author: item.author,
+        categories: item.categories || [],
+        tags: item.tags.map((tag: any) => tag?.toLowerCase()) || [],
+        summary: item.summary
+    }});
+
+    const allTags = new Set()
+
+    pages.map(post => {
+      post.tags && post.tags?.map(tag => allTags.add(tag?.toLowerCase()))
+  })
+  return Array.from(allTags).map((tag: any) => {
+    // All the posts that match the current `tag`
+    const filteredPosts = pages.filter((post) => tag.toLowerCase() === 'all' || post.tags?.includes(tag?.toLowerCase()))
+
+    return {
+        params: { 
+            slug: tag.toLowerCase() || 'all'
+        },
+        props: {
+            pages: filteredPosts
+        }
+    };
+  });
+}
+
+const { pages } = Astro.props // pages prop passed in `getStaticPaths`
 ---
 
 <Layout>
-    <h1>404</h1>
-    <p>Page not found, I may still be working on it</p>
+    <div class="column is-8-desktop">
+        <div id="search" class="ml-3 p-4 -mt-8">  </div>
+        {pages && pages?.map((post: any) => (
+          <PostResult 
+            author={post.author}
+            categories={post.categories?.map((tag) =>{ return { name: tag, url: `/tag/${tag}` }}) }
+            postDate={post.date}
+            postSummary={post.summary}
+            tags={post.tags?.map((tag) =>{ return { name: tag, url: `/tag/${tag}` }}) }
+            postUrl={post.url}
+            postTitle={post.title}
+            images={post.images}
+          />
+        ))}
+      </div>
 </Layout>

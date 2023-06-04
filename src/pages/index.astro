@@ -23,9 +23,9 @@ const blok = await response.json();
 
 const posts = blok?.stories?.sort((a: any, b: any) => a.published_at.valueOf() - b.published_at.valueOf())
 .map((story: any) => {
-  const { published_at, full_slug } = story;
+  const { published_at, full_slug, tag_list } = story;
   const content_data = story.content;
-  const { categories, images, summary, tag, title, content } = content_data;
+  const { categories, images, summary, title, content } = content_data;
 
   return {
     author: env.STORYBLOK_AUTHOR,
@@ -33,7 +33,7 @@ const posts = blok?.stories?.sort((a: any, b: any) => a.published_at.valueOf() -
     date: new Date(published_at),
     images: images.map((image: any) => image.filename),
     summary,
-    tags: tag.map((tag: any) => ({ name: tag.name, url: `/tag/${tag.name}` })),
+    tags: tag_list.map((tag: any) => ({ name: tag, url: `/tag/${tag}` })),
     title,
     url: `/posts/${full_slug}`,
     content: renderRichText(content)

@@ -12,7 +12,7 @@ const { tags } = Astro.props
     <h5 class="widget-title"><span>Tags</span></h5>
     <ul class="list-inline widget-list-inline">
       { tags && tags.map(tag => (<li class="list-inline-item">
-         <a href={tag.url}>{tag.name}</a>
+         <a href={tag.url?.toLocaleLowerCase()}>{tag.name?.toLowerCase()}</a>
       </li>)) }
     </ul>
  </div>
