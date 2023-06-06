@@ -2,6 +2,8 @@ import { useState } from 'react'
 
 export default function Newsletter() {
     const [email, setEmailText] = useState('')
+    const [hasErrors, setHasErrors] = useState(false)
+    const [hasSuccess, setHasSuccess] = useState(false)
 
     const handleSubmit = async (e: any) => {
         e.preventDefault()
@@ -15,13 +17,14 @@ export default function Newsletter() {
             body: JSON.stringify(data)
         })
 
-        console.log(response)
+        setHasErrors(!response.ok)
+        setHasSuccess(response.ok)
     }
 
     return (
         <div className="column is-3-desktop">
              <h6 className="mb-4">Subscribe Newsletter</h6>
-             <form className="subscription"
+             <form className={`subscription ${hasErrors ? 'is-hidden' : 'is-block'}`}
               onSubmit={handleSubmit}>
                 <div className="is-relative">
                    <i className="ti-email email-icon"></i>
@@ -33,6 +36,28 @@ export default function Newsletter() {
                 
                 <button className="btn btn-primary w-100 rounded mt-2" type="submit">Subscribe now</button>
              </form>
+
+             <article className={`message is-danger ${hasErrors ? 'is-block' : 'is-hidden'}` }>
+                <div className="message-header">
+                    <p></p>
+                    <button className="delete" aria-label="delete" onClick={(e) => setHasErrors(false)}></button>
+                </div>
+                <div className="message-body">
+                    Oops! Something went wrong. Please try again later.
+                </div>
+            </article>
+
+            <article className={`message is-primary is-light ${hasSuccess ? 'is-block' : 'is-hidden'}` }>
+                <div className="message-header">
+                    <p></p>
+                    <button className="delete" aria-label="delete" onClick={(e) => setHasSuccess(false)}></button>
+                </div>
+                <div className="message-body">
+                    Thank you, I will keep you updated.
+                </div>
+            </article>
           </div>
+     
+     
     )
 }
