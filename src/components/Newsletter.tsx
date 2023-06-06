@@ -3,9 +3,19 @@ import { useState } from 'react'
 export default function Newsletter() {
     const [email, setEmailText] = useState('')
 
-    const handleSubmit = (e: any) => {
+    const handleSubmit = async (e: any) => {
         e.preventDefault()
-        location.href = `/search?search=${email}`
+        const data = { 'email': email }
+        
+        var response = await fetch('/api/NewsletterSubscriber', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+
+        console.log(response)
     }
 
     return (
@@ -20,16 +30,6 @@ export default function Newsletter() {
                     onChange={(e) => setEmailText(e.target.value)}
                    />
                 </div>
-                
-                <article className="message is-danger">
-                    <div className="message-header">
-                        <p>Unavailable</p>
-                        <button className="delete" aria-label="delete"></button>
-                    </div>
-                    <div className="message-body">
-                        Unfortunately we are not accepting new subscribers at this time.
-                    </div>
-                </article>
                 
                 <button className="btn btn-primary w-100 rounded mt-2" type="submit">Subscribe now</button>
              </form>
