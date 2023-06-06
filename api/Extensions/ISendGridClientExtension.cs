@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Api.Models;
@@ -19,7 +20,7 @@ public static class ISendGridClientExtension {
                     list_ids = new[] { SendGridConfiguration.NewsletterListId },
                     Contacts = new[] { contact }
                 }, jsonOptions);
-            logger.LogInformation($"SendGrid.RequestBody: {data}");
+            Activity.Current?.AddBaggage("SendGrid.RequestBody", data);
 
             // add recipient
             var response = await sendGridClient.RequestAsync(
@@ -27,13 +28,15 @@ public static class ISendGridClientExtension {
                 urlPath: "marketing/contacts",
                 requestBody: data
             );
+            Activity.Current?.AddBaggage("SendGrid.response.StatusCode", response.StatusCode.ToString());
 
             var message = await response.Body.ReadAsStringAsync();
             if ((int)response.StatusCode > StatusCodes.Status400BadRequest) {
                 logger.LogError($"SendGrid.Response: {message}");
                 throw new Exception(message);
             }
-
+ 
+            Activity.Current?.AddBaggage("SendGrid.message", message);
             return (int)response.StatusCode;
         }
     }
