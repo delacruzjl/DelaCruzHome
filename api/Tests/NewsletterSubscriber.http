@@ -1,5 +1,4 @@
 @url = http://localhost:7071/api 
-@email = m8ceg.delacruzhome@inbox.testmail.app 
 @contentType = application/json
 
 POST {{url}}/NewsletterSubscriber
@@ -8,3 +7,17 @@ Content-Type: {{contentType}}
 {
     "email": "{{email}}"
 }
+
+###
+
+POST {{url}}/NewsletterSubscriber
+Content-Type: {{contentType}}
+
+{
+    "email": ""
+}
+
+###
+
+POST {{url}}/NewsletterSubscriber
+Content-Type: {{contentType}}

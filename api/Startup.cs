@@ -1,9 +1,11 @@
 using System;
 using System.Text.Json;
 using Api.Models;
+using Api.Validators;
+using FluentValidation;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
-using Microsoft.Azure.WebJobs.Hosting;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using SendGrid;
 
 [assembly: FunctionsStartup(typeof(Api.Startup))]
@@ -17,13 +19,15 @@ public class Startup : FunctionsStartup
         var services = builder.Services;
 
         services.AddLogging();
+        services.AddSingleton(new SendGridConfiguration());
         services.AddSingleton(new JsonSerializerOptions
         {
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
             PropertyNameCaseInsensitive = true,
             WriteIndented = true
         });
-
+        services.AddValidatorsFromAssemblyContaining<NewsletterContactValidator>();
+        
         var apiKey = SendGridConfiguration.ApiKey;
         services.AddSingleton<ISendGridClient>(new SendGridClient(apiKey));
     }

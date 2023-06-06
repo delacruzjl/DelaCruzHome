@@ -1,10 +1,7 @@
-using System.ComponentModel.DataAnnotations;
-
 namespace Api.Models;
 
-public class NewsletterContact
+public class NewsletterContact : ApiModelBase
 {
-    [EmailAddress]
     public string Email { get; set; }
 
     public NewsletterContact()
