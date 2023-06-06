@@ -1,0 +1,8 @@
+@email = m8ceg.delacruzhome@inbox.testmail.app 
+POST http://localhost:7071/api/NewsletterSubscriber
+Content-Type: application/json
+
+{
+    
+    "email": "{{email}}"
+}
