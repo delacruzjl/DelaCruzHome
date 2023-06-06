@@ -1,5 +1,6 @@
 using System;
 using System.Text.Json;
+using Api.Models;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.Azure.WebJobs.Hosting;
 using Microsoft.Extensions.DependencyInjection;
@@ -23,7 +24,7 @@ public class Startup : FunctionsStartup
             WriteIndented = true
         });
 
-        var apiKey = Environment.GetEnvironmentVariable("SENDGRID_API_KEY");
+        var apiKey = SendGridConfiguration.ApiKey;
         services.AddSingleton<ISendGridClient>(new SendGridClient(apiKey));
     }
 }

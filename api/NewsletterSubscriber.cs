@@ -47,7 +47,7 @@ public class NewsletterSubscriber
             var data = JsonSerializer.Serialize(
                 new
                 {
-                    list_ids = new[] { Environment.GetEnvironmentVariable("SENDGRID_NEWSLETTER_LIST_ID") },
+                    list_ids = new[] { SendGridConfiguration.NewsletterListId },
                     Contacts = new[] { contact }
                 }, _jsonOptions);
             _logger.LogInformation($"SendGrid.RequestBody: {data}");
