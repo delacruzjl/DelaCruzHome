@@ -13,7 +13,6 @@ const apiToken = `token=${env.STORYBLOK_TOKEN}`
 const responseVersion = 'version=published'
 
 const pageUrl = `${baseUrl}/stories/about?${apiToken}&${responseVersion}`;
-console.log(pageUrl);
 
 const response = await fetch(pageUrl);
 const blok = await response.json();

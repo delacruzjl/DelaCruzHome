@@ -38,7 +38,7 @@ public class NewsletterSubscriber
     [OpenApiOperation(operationId: "Subscribe", tags: new[] { "Subscribe" })]
     [OpenApiSecurity("function_key", SecuritySchemeType.ApiKey, Name = "code", In = OpenApiSecurityLocationType.Query)]        
     [OpenApiRequestBody(contentType: "application/json; charset=utf-8", bodyType: typeof(NewsletterContact), Description = "Sample Newsletter Contact", Required = true)]
-    [OpenApiResponseWithoutBody(statusCode: System.Net.HttpStatusCode.Accepted, Description = "The response submitted to SendGrid")]
+    [OpenApiResponseWithoutBody(statusCode: System.Net.HttpStatusCode.Accepted, Description = "The response was accepted by SendGrid API")]
     public async Task<IActionResult> Subscribe(
         [HttpTrigger(AuthorizationLevel.Function, "post")] HttpRequest req, ILogger _logger)
     {
