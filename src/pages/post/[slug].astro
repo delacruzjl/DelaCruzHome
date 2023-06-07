@@ -1,47 +1,22 @@
 ---
 import Layout from "../../layouts/Layout.astro"
-import { loadEnv } from 'vite';
-import { renderRichText } from '@storyblok/astro';
+import { BlogPost } from "../../lib/post-service";
+import { PostCategory, PostService, PostTag } from "../../lib/post-service";
 
 export async function getStaticPaths() {
-    
-    const env = loadEnv("", process.cwd(), 'STORYBLOK');
+    const postService = new PostService()
+    const items = await postService.getPosts()    
 
-    // // get from API
-    const baseUrl = env.STORYBLOK_API_BASE_URL
-
-    const apiToken = `token=${env.STORYBLOK_TOKEN}`
-    const responseVersion = 'version=published'
-    const filterQuery = "filter_query[component][in]=post"
-
-    const pageUrl = `${baseUrl}/stories?${apiToken}&${responseVersion}&${filterQuery}`;
-
-    const postsResponse = await fetch(pageUrl);
-    const posts = await postsResponse.json();
-
-    const items: Array<any> = posts?.stories?.map((json: any) => { 
-        return {
-            slug: json.slug,
-            title: json.content?.title,
-            content: renderRichText(json.content?.content),
-            date: new Date(json.published_at).toLocaleDateString(),
-            images: json.content?.images,
-            author: env.STORYBLOK_AUTHOR,
-            categories: json.content?.categories?.map((category: any) => category.name),
-            tags: json.tag_list || []
-        };
-    });
-
-    const pages = items.map((item) => ({
+    const pages = items.map((item: BlogPost) => ({
         params: { slug: item.slug },
         props: {
-        title: item.title,
-        content: item.content,
-        date: new Date(item.date).toLocaleDateString(),
-        images: item.images,
-        author: item.author,
-        categories: item.categories,
-        tags: item.tags
+            title: item.title,
+            content: item.content,
+            date: new Date(item.date).toLocaleDateString(),
+            images: item.images,
+            author: item.author,
+            categories: item.categories || [],
+            tags: item.tags || []
         },
     }));
 
@@ -65,16 +40,16 @@ const { content, title, date, images, author, categories,tags } = Astro.props;
                         </li>
                         <li class="list-inline-item">Date : {date}</li>
                         <li class="list-inline-item">Categories : 
-                            {categories && categories.map((cat: any, idx: number) => (
-                                <a href={`/category/${cat.toLowerCase()}`} class="ml-1">
-                                    {idx > 0 && categories.length > 1 && ', '} {cat} 
+                            {categories && categories.map((cat: PostCategory, idx: number) => (
+                                <a href={cat.url} class="ml-1">
+                                    {idx > 0 && ', '} {cat.name} 
                                 </a>
                             ))}
                         </li>
                         <li class="list-inline-item">Tags : 
-                            {tags && tags.map((tag: any, idx: number) => (
-                                <a href={`/tag/${tag.toLowerCase()}`} class="ml-1">
-                                    {idx > 0 && tag.length > 1 && ', '} {tag} 
+                            {tags && tags.map((tag: PostTag, idx: number) => (
+                                <a href={tag.url} class="ml-1">
+                                    {idx > 0 && ', '} {tag.name} 
                                 </a> 
                             ))}                            
                         </li>

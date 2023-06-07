@@ -1,0 +1,23 @@
+@url = http://localhost:7071/api 
+@contentType = application/json
+
+POST {{url}}/NewsletterSubscriber
+Content-Type: {{contentType}}
+
+{
+    "email": "{{email}}"
+}
+
+###
+
+POST {{url}}/NewsletterSubscriber
+Content-Type: {{contentType}}
+
+{
+    "email": ""
+}
+
+###
+
+POST {{url}}/NewsletterSubscriber
+Content-Type: {{contentType}}

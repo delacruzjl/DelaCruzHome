@@ -1,66 +1,17 @@
 ---
-import { loadEnv } from 'vite';
-import { renderRichText } from '@storyblok/astro';
 import Categories from "../components/Categories.astro";
 import LastestPosts from "../components/LastestPosts.astro";
 import PostResult from "../components/PostResultFull.astro";
 import Tags from "../components/Tags.astro";
 import Layout from "../layouts/Layout.astro";
+import { BlogPost, PostService } from '../lib/post-service';
 
-const env = loadEnv("", process.cwd(), 'STORYBLOK');
-
-// // get from API
-const baseUrl = env.STORYBLOK_API_BASE_URL
-
-const apiToken = `token=${env.STORYBLOK_TOKEN}`
-const responseVersion = 'version=published'
-const filterQuery = "filter_query[component][in]=post"
-
-const pageUrl = `${baseUrl}/stories?${apiToken}&${responseVersion}&${filterQuery}`;
-
-const response = await fetch(pageUrl);
-const blok = await response.json();
-
-const posts = blok?.stories?.sort((a: any, b: any) => a.published_at.valueOf() - b.published_at.valueOf())
-.map((story: any) => {
-  const { published_at, full_slug, tag_list } = story;
-  const content_data = story.content;
-  const { categories, images, summary, title, content } = content_data;
-
-  return {
-    author: env.STORYBLOK_AUTHOR,
-    categories: categories.map((cat: any) => ({ name: cat.name, url: `/category/${cat.name}` })),
-    date: new Date(published_at),
-    images: images.map((image: any) => image.filename),
-    summary,
-    tags: tag_list.map((tag: any) => ({ name: tag, url: `/tag/${tag}` })),
-    title,
-    url: `/post/${full_slug}`,
-    content: renderRichText(content)
-  };
-});
-
-const rawCategories = posts?.map((post: any) => 
-    post.categories).flat()
-
-const categories: Array<{ name: string, count: number, url: string }> = [] 
-rawCategories?.forEach((category: any) => {
-  let idx = categories.findIndex((c) => c.name === category.name)
-
-  if (idx >= 0) {
-    categories[idx].count = categories[idx].count + 1 || 1
-  } else {
-    categories.push({name: category.name, count: 1, url: category.url})
-  }
-})
-
-const tags = posts?.map((post: any) => 
-    post.tags).flat()
-  .filter((tag: any, index: number, self: any) => 
-    self.findIndex((t: any) => t.name === tag.name) === index)
-
-const latest = posts?.sort((a: any, b: any) => b.date.valueOf() - a.date.valueOf()).slice(0, 3)
-
+const postService = new PostService()
+const posts = await postService.getPosts()
+const categories = posts.length > 0 ? postService.getCategoryLinks(posts) : []
+const tags = posts.length > 0 ? postService.getTagLinks(posts) : []
+const latest = posts.length > 0 ? posts?.sort((a: any, b: any) => 
+  b.date.valueOf() - a.date.valueOf()).slice(0, 3) : []
 ---
 
 <Layout >
@@ -71,7 +22,7 @@ const latest = posts?.sort((a: any, b: any) => b.date.valueOf() - a.date.valueOf
       <div class="columns is-desktop is-multiline">
         <div class="column is-8-desktop">
           <div id="search" class="ml-3 p-4 -mt-8">  </div>
-          {posts && posts?.map((post: any) => (
+          {posts && posts?.map((post: BlogPost) => (
             <PostResult 
               author={post.author}
               categories={post.categories}
@@ -111,7 +62,6 @@ const latest = posts?.sort((a: any, b: any) => b.date.valueOf() - a.date.valueOf
 
     window.addEventListener('keydown', (event) => {
         if (event.key === '/') {
-            console.log('you pressed the slash');
             event.preventDefault();
             (document.querySelector('div#search input') as HTMLInputElement).focus();
         }
