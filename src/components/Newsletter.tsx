@@ -26,7 +26,7 @@ export default function Newsletter() {
     return (
         <div className="column is-3-desktop">
              <h6 className="mb-4">Subscribe Newsletter</h6>
-             <form className={`subscription ${hasErrors ? 'is-hidden' : 'is-block'}`}
+             <form className={`subscription ${hasErrors || hasSuccess ? 'is-hidden' : 'is-block'}`}
               onSubmit={handleSubmit}>
                 <div className="is-relative">
                    <i className="ti-email email-icon"></i>
