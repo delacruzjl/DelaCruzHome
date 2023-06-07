@@ -72,7 +72,7 @@ export class PostService {
         const pageUrl = `${baseUrl}/stories?${apiToken}&${responseVersion}&${filterQuery}`
 
         const response = await fetch(pageUrl);
-        if (parseInt(response.statusText) >= 400) {
+        if (response.status >= 400) {
             return []
         }
 

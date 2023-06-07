@@ -18,8 +18,8 @@ export default function Newsletter() {
             body: JSON.stringify(data)
         })
 
-        setHasErrors(!response.ok)
-        setHasSuccess(response.ok)
+        setHasErrors(!(response.status >= 400))
+        setHasSuccess(response.status < 400)
     }
 
     return (
