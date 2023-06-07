@@ -8,6 +8,7 @@ import { BlogPost, PostService } from '../lib/post-service';
 
 const postService = new PostService()
 const posts = await postService.getPosts()
+
 const categories = posts.length > 0 ? postService.getCategoryLinks(posts) : []
 const tags = posts.length > 0 ? postService.getTagLinks(posts) : []
 const latest = posts.length > 0 ? posts?.sort((a: any, b: any) => 

@@ -23,7 +23,9 @@ export async function getStaticPaths({}) {
 
   return Array.from(allTags).map((tag: any) => {
     // All the posts that match the current `tag`
-    const filteredPosts = pages.filter((post) => tag.toLowerCase() === 'all' || post.tags?.findIndex(t => t.name.toLowerCase() === tag.toLowerCase()) > -1)
+    const filteredPosts = pages.filter((post) => 
+      tag.toLowerCase() === 'all' || 
+      post.tags?.findIndex(t => t.name.toLowerCase() === tag.toLowerCase()) > -1)
 
     return {
         params: { 
@@ -37,7 +39,6 @@ export async function getStaticPaths({}) {
 }
 
 const {  pages } = Astro.props // pages prop passed in `getStaticPaths`
-
 const pageTitle = `Tag: ${Astro.params["slug"]}`
 ---
 

@@ -11,14 +11,12 @@ const baseUrl = env.STORYBLOK_API_BASE_URL
 
 const apiToken = `token=${env.STORYBLOK_TOKEN}`
 const responseVersion = 'version=published'
-
 const pageUrl = `${baseUrl}/stories/about?${apiToken}&${responseVersion}`;
 
 const response = await fetch(pageUrl);
 const blok = await response.json();
-const { published_at, full_slug } = blok.story;
 const content_data = blok.story.content;
-const { title, summary, content } = content_data;
+const { content } = content_data;
 const htmlContent = renderRichText(content)
 
 ---

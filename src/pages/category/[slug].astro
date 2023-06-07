@@ -11,27 +11,28 @@ export async function getStaticPaths({}) {
 
     const allCategories = new Set()
 
-  pages.forEach(post => {
-      if (post.categories) {
-        post.categories.forEach(cat => 
-          allCategories.add(cat.name?.toLowerCase()))
-      } 
-  })
+    pages.forEach(post => {
+        if (post.categories) {
+          post.categories.forEach(cat => 
+            allCategories.add(cat.name?.toLowerCase()))
+        } 
+    })
 
-  return Array.from(allCategories).map((cat: any) => {
-    // All the posts that match the current `tag`
-    const filteredPosts = pages.filter((post) => 
-    cat.toLowerCase() === 'all' || post.categories?.findIndex(c => c.name.toLowerCase() === cat.toLowerCase()) > -1)
+    return Array.from(allCategories).map((cat: any) => {
+      // All the posts that match the current `tag`
+      const filteredPosts = pages.filter((post) => 
+        cat.toLowerCase() === 'all' || 
+        post.categories?.findIndex(c => c.name.toLowerCase() === cat.toLowerCase()) > -1)
 
-    return {
-        params: { 
-            slug: cat.toLowerCase() || 'all'
-        },
-        props: {
-            pages: filteredPosts
-        }
-    };
-  });
+      return {
+          params: { 
+              slug: cat.toLowerCase() || 'all'
+          },
+          props: {
+              pages: filteredPosts
+          }
+      };
+    });
 }
 
 const { pages } = Astro.props // pages prop passed in `getStaticPaths`
