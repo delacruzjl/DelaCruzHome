@@ -10,7 +10,7 @@ export default function Newsletter() {
         const data = { 'email': email }
         
 
-        const response = await fetch(`http://localhost:7071/api/NewsletterSubscriber`, {
+        const response = await fetch(`/api/NewsletterSubscriber`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
