@@ -1,0 +1,11 @@
+@url = http://localhost:7071/api 
+@contentType = application/json
+
+POST {{url}}/Emailer
+content-type: {{contentType}}
+
+{
+    "fullName": "John Doe",
+    "email": "{{email}}",
+    "content": "This is a test email that should include content and subject to the admin email."
+}

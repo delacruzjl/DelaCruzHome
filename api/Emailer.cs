@@ -35,7 +35,7 @@ public class Emailer {
     [OpenApiOperation(operationId: "Send", tags: new[] { "EmailerSend" })]
     [OpenApiSecurity("function_key", SecuritySchemeType.ApiKey, Name = "code", In = OpenApiSecurityLocationType.Query)]        
     [OpenApiRequestBody(contentType: "application/json; charset=utf-8", bodyType: typeof(MessageForm), Description = "Sample SendGrid Message", Required = true)]
-    [OpenApiResponseWithoutBody(statusCode: System.Net.HttpStatusCode.Accepted, Description = "The email was accepted by SendGrid API")]
+    [OpenApiResponseWithoutBody(statusCode: System.Net.HttpStatusCode.NoContent, Description = "The email was submited through SendGrid API")]
     public async Task Send(
         [HttpTrigger(AuthorizationLevel.Function, "post")] HttpRequest req, 
         [SendGrid(ApiKey = "SENDGRID_API_KEY")] IAsyncCollector<SendGridMessage> messageCollector,
@@ -54,7 +54,8 @@ public class Emailer {
                 };
 
                 _ = await _sendGridClient.AddContactToSendGrid(contact, _jsonOptions, _logger);
-                await messageCollector.AddAsync(message.ToSendGridMessage());
+                var SendGridMessage = message.ToSendGridMessage();
+                await messageCollector.AddAsync(SendGridMessage);
             }
     }
 }

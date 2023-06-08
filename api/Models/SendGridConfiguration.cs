@@ -22,4 +22,12 @@ public class SendGridConfiguration  {
     public static string SenderName =>
         Environment.GetEnvironmentVariable("SENDGRID_SENDER_NAME")
         ?? throw new ArgumentNullException("SENDGRID_SENDER_NAME");
+
+    public static string SubjectLine =>
+        Environment.GetEnvironmentVariable("SENDGRID_SUBJECT_LINE")
+        ?? throw new ArgumentNullException("SENDGRID_SUBJECT_LINE");
+
+    public static string WebsiteAdminEmail =>
+        Environment.GetEnvironmentVariable("WEBSITE_ADMIN_EMAIL")
+        ?? throw new ArgumentNullException("WEBSITE_ADMIN_EMAIL");
 }
