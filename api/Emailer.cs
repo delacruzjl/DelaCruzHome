@@ -53,7 +53,9 @@ public class Emailer {
                     LastName = names.Last()
                 };
 
-                _ = await _sendGridClient.AddContactToSendGrid(contact, _jsonOptions, _logger);
+                _ = await _sendGridClient.AddContactToSendGridList(contact, _jsonOptions, _logger);
+                _ = await _sendGridClient.AddContactToSendGridGroup(contact, _jsonOptions, _logger);
+                
                 var SendGridMessage = message.ToSendGridMessage();
                 await messageCollector.AddAsync(SendGridMessage);
             }

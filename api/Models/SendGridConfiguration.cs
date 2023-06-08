@@ -30,4 +30,8 @@ public class SendGridConfiguration  {
     public static string WebsiteAdminEmail =>
         Environment.GetEnvironmentVariable("WEBSITE_ADMIN_EMAIL")
         ?? throw new ArgumentNullException("WEBSITE_ADMIN_EMAIL");
+
+    public static int SuppressionGroupId =>
+        int.Parse(Environment.GetEnvironmentVariable("SENDGRID_SUPPRESSION_GROUP_ID")
+        ?? throw new ArgumentNullException("SENDGRID_SUPPRESSION_GROUP_ID"));
 }

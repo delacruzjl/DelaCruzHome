@@ -48,7 +48,8 @@ public class NewsletterSubscriber
             
             var contact = await req.Body.ConvertFrom<NewsletterContact>(_jsonOptions, _logger);
             await contact.Validate(_validator, _logger);
-            var response = await _sendGridClient.AddContactToSendGrid(contact, _jsonOptions, _logger);
+            _ = await _sendGridClient.AddContactToSendGridList(contact, _jsonOptions, _logger);
+            var response = await _sendGridClient.AddContactToSendGridGroup(contact, _jsonOptions, _logger);
 
             return new StatusCodeResult((int)response);
         }
