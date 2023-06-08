@@ -1,5 +1,6 @@
 ---
 import BorderedTitle from "../components/BorderedTitle.astro";
+import ContactApp from "../components/ContactApp";
 import Layout from "../layouts/Layout.astro";
 
 ---
@@ -16,35 +17,13 @@ import Layout from "../layouts/Layout.astro";
                     <div class="content mb-5">
                         <h1 id="ask-us-anything-br-or-just-say-hi">Ask Me Anything <br> Or just Say Hi,</h1>
                        
-                        <article class="message is-danger">
-                            <div class="message-header">
-                                <p>Unavailable</p>
-                                <button class="delete" aria-label="delete"></button>
-                            </div>
-                            <div class="message-body">
-                                Unfurtunately, I'm not available for any freelance work at the moment. But I'm always open to talk about new ideas and projects. So, feel free to contact me anytime.
-                            </div>
-                        </article>
+                        
 
                     </div>
                 </div>
 
                 <div class="column md-6">
-                    <form method="POST" action="#">
-                        <div class="field">
-                            <label class="label" for="name">Your Name (Required)</label>
-                            <input type="text" name="name" id="name" class="input" required>
-                        </div>
-                        <div class="field">
-                            <label class="label" for="email">Your Email Address (Required)</label>
-                            <input type="email" name="email" id="email" class="input" required>
-                        </div>
-                        <div class="field">
-                            <label class="label" for="message">Your Message Here</label>
-                            <textarea name="message" id="message" class="input"></textarea>
-                        </div>
-                        <button type="submit" class="btn btn-primary">Send Now</button>
-                    </form>
+                    <ContactApp client:load />
                 </div>
 
             </div>

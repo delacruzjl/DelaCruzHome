@@ -10,7 +10,35 @@ using SendGrid;
 namespace Api.Extensions;
 
 public static class ISendGridClientExtension {
-    public static async Task<int> AddContactToSendGrid(this ISendGridClient sendGridClient, NewsletterContact contact, JsonSerializerOptions jsonOptions, ILogger logger) {
+    public static async Task<int> AddContactToSendGridGroup(this ISendGridClient sendGridClient, NewsletterContact contact, JsonSerializerOptions jsonOptions, ILogger logger) {
+        using (logger.BeginScope("NewsletterContactExtension.AddContactToGroup")){
+            logger.LogInformation("Adding contact to group");
+
+            var groupId = SendGridConfiguration.SuppressionGroupId;
+            var data = new {
+                recipient_emails = new[]{ contact.Email }
+            };
+
+            var response = await sendGridClient.RequestAsync(
+                method: SendGridClient.Method.POST,
+                urlPath: $"asm/groups/{groupId}/suppressions",
+                requestBody: JsonSerializer.Serialize(data, jsonOptions)
+            );
+
+            Activity.Current?.AddBaggage("SendGrid.response.StatusCode", response.StatusCode.ToString());
+
+            var message = await response.Body.ReadAsStringAsync();
+            if ((int)response.StatusCode >= StatusCodes.Status400BadRequest) {
+                logger.LogError($"SendGrid.Response: {message}");
+                throw new Exception(message);
+            }
+ 
+            Activity.Current?.AddBaggage("SendGrid.message", message);
+            return (int)response.StatusCode;
+        }
+    }
+
+    public static async Task<int> AddContactToSendGridList(this ISendGridClient sendGridClient, NewsletterContact contact, JsonSerializerOptions jsonOptions, ILogger logger) {
         using (logger.BeginScope("NewsletterContactExtension.AddContactToSendGrid")) {
             logger.LogInformation("Adding contact to SendGrid");
 
@@ -31,7 +59,7 @@ public static class ISendGridClientExtension {
             Activity.Current?.AddBaggage("SendGrid.response.StatusCode", response.StatusCode.ToString());
 
             var message = await response.Body.ReadAsStringAsync();
-            if ((int)response.StatusCode > StatusCodes.Status400BadRequest) {
+            if ((int)response.StatusCode >= StatusCodes.Status400BadRequest) {
                 logger.LogError($"SendGrid.Response: {message}");
                 throw new Exception(message);
             }
