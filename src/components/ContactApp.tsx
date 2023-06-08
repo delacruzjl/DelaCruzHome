@@ -11,7 +11,7 @@ export default function ContactApp() {
     const [submitted, setSubmitted] = useState(false);
     const [hasErrors, setHasErrors] = useState(false);
 
-    const { register, handleSubmit, watch, formState: { errors } } = useForm<Inputs>()
+    const { register, handleSubmit, formState: { errors } } = useForm<Inputs>()
     const onSubmit: SubmitHandler<Inputs> = async (data) => {
 
         let formData = JSON.stringify(data)
