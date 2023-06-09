@@ -16,7 +16,10 @@ public class SendGridContactHandler : ISendGridContactHandler
     private readonly ISendGridClient _sendGridClient;
     private readonly JsonSerializerOptions _jsonOptions;
 
-    public SendGridContactHandler(SendGridConfiguration sendGridConfiguration, ISendGridClient sendGridClient, JsonSerializerOptions jsonOptions)
+    public SendGridContactHandler(
+        SendGridConfiguration sendGridConfiguration, 
+        ISendGridClient sendGridClient, 
+        JsonSerializerOptions jsonOptions)
     {
         _sendGridConfiguration = sendGridConfiguration;
         _sendGridClient = sendGridClient;
