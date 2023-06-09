@@ -2,6 +2,8 @@ using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Api.Extensions;
+using Api.Handlers;
+using Api.Interfaces;
 using Api.Models;
 using FluentValidation;
 using Microsoft.AspNetCore.Http;
@@ -20,15 +22,21 @@ public class Emailer {
     private readonly ISendGridClient _sendGridClient;
     private readonly JsonSerializerOptions _jsonOptions;
     private readonly IValidator<MessageForm> _validator;
+    private readonly ISendGridMessageHandler _sendGridMessageHandler;
+    private readonly ISendGridContactHandler _sendGridContactHandler;
 
     public Emailer(
         ISendGridClient sendGridClient,
         JsonSerializerOptions jsonOptions,
-        IValidator<MessageForm> validator)
+        IValidator<MessageForm> validator,
+        ISendGridMessageHandler sendGridMessageHandler,
+        ISendGridContactHandler sendGridContactHandler)
     {
         _sendGridClient = sendGridClient;
         _jsonOptions = jsonOptions;
         _validator = validator;        
+        _sendGridMessageHandler = sendGridMessageHandler;
+        _sendGridContactHandler = sendGridContactHandler;
     }
 
     [FunctionName("Emailer")]
@@ -53,10 +61,10 @@ public class Emailer {
                     LastName = names.Last()
                 };
 
-                _ = await _sendGridClient.AddContactToSendGridList(contact, _jsonOptions, _logger);
-                _ = await _sendGridClient.AddContactToSendGridGroup(contact, _jsonOptions, _logger);
+                _ = await _sendGridContactHandler.AddContactToSendGridList(contact, _logger);
+                _ = await _sendGridContactHandler.AddContactToSendGridGroup(contact, _logger);
                 
-                var SendGridMessage = message.ToSendGridMessage();
+                var SendGridMessage = _sendGridMessageHandler.MakeSendGridMessage(message);
                 await messageCollector.AddAsync(SendGridMessage);
             }
     }
