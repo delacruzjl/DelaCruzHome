@@ -15,7 +15,7 @@ export default function ContactApp() {
     const onSubmit: SubmitHandler<Inputs> = async (data) => {
 
         let formData = JSON.stringify(data)
-        const response = await fetch("/api/mailer", { method: "POST", body: formData})
+        const response = await fetch("/api/Emailer", { method: "POST", body: formData})
     setSubmitted(response.ok)
     setHasErrors(!response.ok)
 
