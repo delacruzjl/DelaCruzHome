@@ -1,5 +1,7 @@
 using System;
 using System.Text.Json;
+using Api.Handlers;
+using Api.Interfaces;
 using Api.Models;
 using Api.Validators;
 using FluentValidation;
@@ -31,6 +33,7 @@ public class Startup : FunctionsStartup
     {
         Configuration = builder.GetContext().Configuration;
         var services = builder.Services;
+        services.AddSingleton<SendGridConfiguration>(_ => new SendGridConfiguration(Configuration));
 
         services.AddLogging();
         services.AddSingleton(new SendGridConfiguration(Configuration));
@@ -40,10 +43,13 @@ public class Startup : FunctionsStartup
             PropertyNameCaseInsensitive = true,
             WriteIndented = true
         });
+
         services.AddValidatorsFromAssemblyContaining<NewsletterContactValidator>();
         
         var apiKey = Configuration["AzureWebJobsSendGridApiKey"];
         services.AddSingleton<ISendGridClient>(new SendGridClient(apiKey));
+        services.AddScoped<ISendGridContactHandler, SendGridContactHandler>();
+        services.AddScoped<ISendGridMessageHandler, SendGridMessageHandler>();
 
         services.AddSingleton<IOpenApiConfigurationOptions>(_ =>
                             {

@@ -13,6 +13,7 @@ using Api.Extensions;
 using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Attributes;
 using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Enums;
 using Api.Handlers;
+using Api.Interfaces;
 
 namespace Api;
 
@@ -21,7 +22,7 @@ public class NewsletterSubscriber
     private readonly ISendGridClient _sendGridClient;
     private readonly JsonSerializerOptions _jsonOptions;
     private readonly IValidator<NewsletterContact> _validator;
-    private readonly SendGridContactHandler _sendGridContactHandler;
+    private readonly ISendGridContactHandler _sendGridContactHandler;
     private readonly SendGridConfiguration _config;
 
     public NewsletterSubscriber(
@@ -29,7 +30,7 @@ public class NewsletterSubscriber
         SendGridConfiguration config,
         JsonSerializerOptions jsonOptions,
         IValidator<NewsletterContact> validator,
-        SendGridContactHandler sendGridContactHandler)
+        ISendGridContactHandler sendGridContactHandler)
     {
         _sendGridClient = sendGridClient;
         _config = config;
