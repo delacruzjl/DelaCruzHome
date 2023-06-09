@@ -1,37 +1,44 @@
 using System;
+using Microsoft.Extensions.Configuration;
 
 namespace Api.Models;
 
 public class SendGridConfiguration  {
-    public static string ApiKey =>
-        Environment.GetEnvironmentVariable("SENDGRID_API_KEY")
-        ?? throw new ArgumentNullException("SENDGRID_API_KEY");
+    private readonly IConfiguration _configuration;
 
-    public static string NewsletterListId =>
-        Environment.GetEnvironmentVariable("SENDGRID_NEWSLETTER_LIST_ID")
+    public SendGridConfiguration(IConfiguration configuration)
+    {
+        _configuration = configuration;
+    }
+    public string ApiKey =>
+        _configuration["AzureWebJobsSendGridApiKey"]
+        ?? throw new ArgumentNullException("AzureWebJobsSendGridApiKey");
+
+    public string NewsletterListId =>
+        _configuration["SENDGRID_NEWSLETTER_LIST_ID"]
         ?? throw new ArgumentNullException("SENDGRID_NEWSLETTER_LIST_ID");
     
-    public static string TemplateId =>
-        Environment.GetEnvironmentVariable("SENDGRID_TEMPLATE_ID")
+    public string TemplateId =>
+        _configuration["SENDGRID_TEMPLATE_ID"]
         ?? throw new ArgumentNullException("SENDGRID_TEMPLATE_ID");
 
-    public static string EmailAddress =>
-        Environment.GetEnvironmentVariable("SENDGRID_EMAIL_ADDRESS")
+    public string EmailAddress =>
+        _configuration["SENDGRID_EMAIL_ADDRESS"]
         ?? throw new ArgumentNullException("SENDGRID_EMAIL_ADDRESS");
 
-    public static string SenderName =>
-        Environment.GetEnvironmentVariable("SENDGRID_SENDER_NAME")
+    public string SenderName =>
+        _configuration["SENDGRID_SENDER_NAME"]
         ?? throw new ArgumentNullException("SENDGRID_SENDER_NAME");
 
-    public static string SubjectLine =>
-        Environment.GetEnvironmentVariable("SENDGRID_SUBJECT_LINE")
+    public string SubjectLine =>
+        _configuration["SENDGRID_SUBJECT_LINE"]
         ?? throw new ArgumentNullException("SENDGRID_SUBJECT_LINE");
 
-    public static string WebsiteAdminEmail =>
-        Environment.GetEnvironmentVariable("WEBSITE_ADMIN_EMAIL")
+    public string WebsiteAdminEmail =>
+        _configuration["WEBSITE_ADMIN_EMAIL"]
         ?? throw new ArgumentNullException("WEBSITE_ADMIN_EMAIL");
 
-    public static int SuppressionGroupId =>
-        int.Parse(Environment.GetEnvironmentVariable("SENDGRID_SUPPRESSION_GROUP_ID")
+    public int SuppressionGroupId =>
+        int.Parse(_configuration["SENDGRID_SUPPRESSION_GROUP_ID"]
         ?? throw new ArgumentNullException("SENDGRID_SUPPRESSION_GROUP_ID"));
 }
