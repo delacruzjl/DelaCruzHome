@@ -12,6 +12,7 @@ using FluentValidation;
 using Api.Extensions;
 using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Attributes;
 using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Enums;
+using Api.Handlers;
 
 namespace Api;
 
@@ -20,18 +21,21 @@ public class NewsletterSubscriber
     private readonly ISendGridClient _sendGridClient;
     private readonly JsonSerializerOptions _jsonOptions;
     private readonly IValidator<NewsletterContact> _validator;
+    private readonly SendGridContactHandler _sendGridContactHandler;
     private readonly SendGridConfiguration _config;
 
     public NewsletterSubscriber(
         ISendGridClient sendGridClient,
         SendGridConfiguration config,
         JsonSerializerOptions jsonOptions,
-        IValidator<NewsletterContact> validator)
+        IValidator<NewsletterContact> validator,
+        SendGridContactHandler sendGridContactHandler)
     {
         _sendGridClient = sendGridClient;
         _config = config;
         _jsonOptions = jsonOptions;
         _validator = validator;
+        _sendGridContactHandler = sendGridContactHandler;
     }
 
     [FunctionName("NewsletterSubscriber")]
@@ -48,8 +52,8 @@ public class NewsletterSubscriber
             
             var contact = await req.Body.ConvertFrom<NewsletterContact>(_jsonOptions, _logger);
             await contact.Validate(_validator, _logger);
-            _ = await _sendGridClient.AddContactToSendGridList(contact, _jsonOptions, _logger);
-            var response = await _sendGridClient.AddContactToSendGridGroup(contact, _jsonOptions, _logger);
+            _ = await _sendGridContactHandler.AddContactToSendGridList(contact, _logger);
+            var response = await _sendGridContactHandler.AddContactToSendGridGroup(contact,  _logger);
 
             return new StatusCodeResult((int)response);
         }
