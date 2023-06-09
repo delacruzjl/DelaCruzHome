@@ -38,7 +38,7 @@ public class Emailer {
     [OpenApiResponseWithoutBody(statusCode: System.Net.HttpStatusCode.NoContent, Description = "The email was submited through SendGrid API")]
     public async Task Send(
         [HttpTrigger(AuthorizationLevel.Function, "post")] HttpRequest req, 
-        [SendGrid(ApiKey = "SENDGRID_API_KEY")] IAsyncCollector<SendGridMessage> messageCollector,
+        [SendGrid] IAsyncCollector<SendGridMessage> messageCollector,
         ILogger _logger) {
             using (_logger.BeginScope("Emailer")) {
                 _logger.LogInformation("C# HTTP trigger function processed a request.");

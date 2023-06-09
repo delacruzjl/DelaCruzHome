@@ -7,6 +7,7 @@ using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Abstractions;
 using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Configurations;
 using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Enums;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
@@ -18,12 +19,21 @@ namespace Api;
 public class Startup : FunctionsStartup
 // END: ed8c6549bwf9
 {
+    public IConfiguration Configuration { get; private set; }
+
+    public override void ConfigureAppConfiguration(IFunctionsConfigurationBuilder builder)
+    {
+        string cs = Environment.GetEnvironmentVariable("connectionString");
+        builder.ConfigurationBuilder.AddAzureAppConfiguration(cs);
+    }
+
     public override void Configure(IFunctionsHostBuilder builder)
     {
+        Configuration = builder.GetContext().Configuration;
         var services = builder.Services;
 
         services.AddLogging();
-        services.AddSingleton(new SendGridConfiguration());
+        services.AddSingleton(new SendGridConfiguration(Configuration));
         services.AddSingleton(new JsonSerializerOptions
         {
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
@@ -32,7 +42,7 @@ public class Startup : FunctionsStartup
         });
         services.AddValidatorsFromAssemblyContaining<NewsletterContactValidator>();
         
-        var apiKey = SendGridConfiguration.ApiKey;
+        var apiKey = Configuration["AzureWebJobsSendGridApiKey"];
         services.AddSingleton<ISendGridClient>(new SendGridClient(apiKey));
 
         services.AddSingleton<IOpenApiConfigurationOptions>(_ =>
