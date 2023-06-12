@@ -1,37 +1,52 @@
 using System;
+using Microsoft.Extensions.Configuration;
 
 namespace Api.Models;
 
 public class SendGridConfiguration  {
-    public static string ApiKey =>
-        Environment.GetEnvironmentVariable("SENDGRID_API_KEY")
-        ?? throw new ArgumentNullException("SENDGRID_API_KEY");
+    private readonly IConfiguration _configuration;
 
-    public static string NewsletterListId =>
-        Environment.GetEnvironmentVariable("SENDGRID_NEWSLETTER_LIST_ID")
-        ?? throw new ArgumentNullException("SENDGRID_NEWSLETTER_LIST_ID");
+    public SendGridConfiguration(IConfiguration configuration)
+    {
+        _configuration = configuration;
+    }
+    public string ApiKey =>
+        string.IsNullOrWhiteSpace(_configuration["SENDGRID_API_KEY"])
+            ? _configuration["SENDGRID_API_KEY"]
+            : throw new ArgumentNullException("SENDGRID_API_KEY");
+
+    public string NewsletterListId =>
+        string.IsNullOrWhiteSpace(_configuration["SENDGRID_NEWSLETTER_LIST_ID"])
+        ? _configuration["SENDGRID_NEWSLETTER_LIST_ID"]
+        : throw new ArgumentNullException("SENDGRID_NEWSLETTER_LIST_ID");
     
-    public static string TemplateId =>
-        Environment.GetEnvironmentVariable("SENDGRID_TEMPLATE_ID")
-        ?? throw new ArgumentNullException("SENDGRID_TEMPLATE_ID");
+    public string TemplateId =>
+        string.IsNullOrWhiteSpace(_configuration["SENDGRID_TEMPLATE_ID"])
+        ? _configuration["SENDGRID_TEMPLATE_ID"]
+        : throw new ArgumentNullException("SENDGRID_TEMPLATE_ID");
 
-    public static string EmailAddress =>
-        Environment.GetEnvironmentVariable("SENDGRID_EMAIL_ADDRESS")
-        ?? throw new ArgumentNullException("SENDGRID_EMAIL_ADDRESS");
+    public string EmailAddress =>
+        string.IsNullOrWhiteSpace(_configuration["SENDGRID_EMAIL_ADDRESS"])
+        ? _configuration["SENDGRID_EMAIL_ADDRESS"]
+        : throw new ArgumentNullException("SENDGRID_EMAIL_ADDRESS");
 
-    public static string SenderName =>
-        Environment.GetEnvironmentVariable("SENDGRID_SENDER_NAME")
-        ?? throw new ArgumentNullException("SENDGRID_SENDER_NAME");
+    public string SenderName =>
+        string.IsNullOrWhiteSpace(_configuration["SENDGRID_SENDER_NAME"])
+        ? _configuration["SENDGRID_SENDER_NAME"]
+        : throw new ArgumentNullException("SENDGRID_SENDER_NAME");
 
-    public static string SubjectLine =>
-        Environment.GetEnvironmentVariable("SENDGRID_SUBJECT_LINE")
-        ?? throw new ArgumentNullException("SENDGRID_SUBJECT_LINE");
+    public string SubjectLine =>
+        string.IsNullOrWhiteSpace(_configuration["SENDGRID_SUBJECT_LINE"])
+        ? _configuration["SENDGRID_SUBJECT_LINE"]
+        : throw new ArgumentNullException("SENDGRID_SUBJECT_LINE");
 
-    public static string WebsiteAdminEmail =>
-        Environment.GetEnvironmentVariable("WEBSITE_ADMIN_EMAIL")
-        ?? throw new ArgumentNullException("WEBSITE_ADMIN_EMAIL");
+    public string WebsiteAdminEmail =>
+        string.IsNullOrWhiteSpace(_configuration["WEBSITE_ADMIN_EMAIL"])
+        ? _configuration["WEBSITE_ADMIN_EMAIL"]
+        : throw new ArgumentNullException("WEBSITE_ADMIN_EMAIL");
 
-    public static int SuppressionGroupId =>
-        int.Parse(Environment.GetEnvironmentVariable("SENDGRID_SUPPRESSION_GROUP_ID")
-        ?? throw new ArgumentNullException("SENDGRID_SUPPRESSION_GROUP_ID"));
+    public int SuppressionGroupId =>
+        string.IsNullOrWhiteSpace(_configuration["SENDGRID_SUPPRESSION_GROUP_ID"])
+        ? int.Parse(_configuration["SENDGRID_SUPPRESSION_GROUP_ID"])
+        : throw new ArgumentNullException("SENDGRID_SUPPRESSION_GROUP_ID");
 }

@@ -1,5 +1,7 @@
 using System;
 using System.Text.Json;
+using Api.Handlers;
+using Api.Interfaces;
 using Api.Models;
 using Api.Validators;
 using FluentValidation;
@@ -7,8 +9,9 @@ using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Abstractions;
 using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Configurations;
 using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Enums;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration.AzureAppConfiguration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using SendGrid;
 
@@ -18,12 +21,31 @@ namespace Api;
 public class Startup : FunctionsStartup
 // END: ed8c6549bwf9
 {
+    private IConfiguration _configuration;
+    public override void ConfigureAppConfiguration(IFunctionsConfigurationBuilder builder)
+    {
+        var connectionString = Environment.GetEnvironmentVariable("connectionString");
+        var label = Environment.GetEnvironmentVariable("label") ?? "";
+
+        builder.ConfigurationBuilder.AddAzureAppConfiguration(options =>{
+            options.Connect(connectionString);
+            options.Select(KeyFilter.Any, label);
+        });
+
+        _configuration = builder.ConfigurationBuilder.Build();
+    }
+
     public override void Configure(IFunctionsHostBuilder builder)
     {
         var services = builder.Services;
+        services.AddAzureAppConfiguration();
+        services.AddSingleton<IConfiguration>(_configuration);
+        
+        var configuration = services.BuildServiceProvider().GetService<IConfiguration>(); 
+        SendGridConfiguration sengridConfiguration = new(configuration);
+        services.AddSingleton(sengridConfiguration);
 
         services.AddLogging();
-        services.AddSingleton(new SendGridConfiguration());
         services.AddSingleton(new JsonSerializerOptions
         {
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
@@ -32,8 +54,11 @@ public class Startup : FunctionsStartup
         });
         services.AddValidatorsFromAssemblyContaining<NewsletterContactValidator>();
         
-        var apiKey = SendGridConfiguration.ApiKey;
+        var apiKey = sengridConfiguration.ApiKey;
         services.AddSingleton<ISendGridClient>(new SendGridClient(apiKey));
+        services.AddSingleton(new SendGridMessageHandler(sengridConfiguration));
+        services.AddScoped<ISendGridMessageHandler, SendGridMessageHandler>();
+        services.AddScoped<ISendGridContactHandler, SendGridContactHandler>();
 
         services.AddSingleton<IOpenApiConfigurationOptions>(_ =>
                             {
