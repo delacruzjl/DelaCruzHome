@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - main
-  pull_request:
+  pull_request_target:
     types: [opened, synchronize, reopened, closed]
     branches:
       - main
@@ -12,8 +12,22 @@ on:
     - cron: '0 */6 * * *'    
 
 jobs:
+  build_npm:
+    if: github.actor == 'dependabot[bot]'
+    runs-on: ubuntu-latest
+    name: Build (npm)
+    steps:
+      - uses: actions/checkout@v2.3.4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - name: npm install, build, and test
+        run: |
+          npm install
+          npm run build --omit=dev
+          npm run test --if-present
+
   build_and_deploy_job:
-    if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
+    if: (github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')) && github.actor != 'dependabot[bot]'
     runs-on: ubuntu-latest
     name: Build and Deploy Job
     steps:
