@@ -1,15 +1,11 @@
 using System;
-using System.Text.Json;
-using Api.Handlers;
-using Api.Interfaces;
-using Api.Models;
-using Api.Validators;
-using FluentValidation;
+using Jodelac.SendGridAzFunction.Extensions;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Abstractions;
 using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Configurations;
 using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Enums;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration.AzureAppConfiguration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
@@ -26,31 +22,24 @@ public class Startup : FunctionsStartup
     public override void ConfigureAppConfiguration(IFunctionsConfigurationBuilder builder)
     {
         string cs = Environment.GetEnvironmentVariable("connectionString");
-        builder.ConfigurationBuilder.AddAzureAppConfiguration(cs);
+        var environment = Environment.GetEnvironmentVariable("environment");
+        builder.ConfigurationBuilder.AddAzureAppConfiguration(options => {
+            options.Connect(cs)
+                .Select(KeyFilter.Any, LabelFilter.Null);
+            
+            if (!string.IsNullOrWhiteSpace(environment)){
+                options.Select(KeyFilter.Any, environment);
+            }                
+        });
     }
 
     public override void Configure(IFunctionsHostBuilder builder)
     {
         Configuration = builder.GetContext().Configuration;
         var services = builder.Services;
-        services.AddSingleton<SendGridConfiguration>(_ => new SendGridConfiguration(Configuration));
-
         services.AddLogging();
-        services.AddSingleton(new SendGridConfiguration(Configuration));
-        services.AddSingleton(new JsonSerializerOptions
-        {
-            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-            PropertyNameCaseInsensitive = true,
-            WriteIndented = true
-        });
-
-        services.AddValidatorsFromAssemblyContaining<NewsletterContactValidator>();
-        
-        var apiKey = Configuration["AzureWebJobsSendGridApiKey"];
-        services.AddSingleton<ISendGridClient>(new SendGridClient(apiKey));
-        services.AddScoped<ISendGridContactHandler, SendGridContactHandler>();
-        services.AddScoped<ISendGridMessageHandler, SendGridMessageHandler>();
-
+        services.AddSendGridAzFunction(Configuration);
+       
         services.AddSingleton<IOpenApiConfigurationOptions>(_ =>
                             {
                                 var options = new OpenApiConfigurationOptions()
