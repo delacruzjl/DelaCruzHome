@@ -5,38 +5,19 @@ using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-using System.Text.Json;
-using Api.Models;
-using SendGrid;
-using FluentValidation;
-using Api.Extensions;
 using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Attributes;
 using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Enums;
-using Api.Handlers;
-using Api.Interfaces;
+using Jodelac.SendGridAzFunction.Interfaces;
+using Jodelac.SendGridAzFunction.Models;
 
 namespace Api;
 
 public class NewsletterSubscriber
 {
-    private readonly ISendGridClient _sendGridClient;
-    private readonly JsonSerializerOptions _jsonOptions;
-    private readonly IValidator<NewsletterContact> _validator;
-    private readonly ISendGridContactHandler _sendGridContactHandler;
-    private readonly SendGridConfiguration _config;
-
-    public NewsletterSubscriber(
-        ISendGridClient sendGridClient,
-        SendGridConfiguration config,
-        JsonSerializerOptions jsonOptions,
-        IValidator<NewsletterContact> validator,
-        ISendGridContactHandler sendGridContactHandler)
+    private readonly ISubscriptionHelper _subscriptionHelper;
+    public NewsletterSubscriber(ISubscriptionHelper subscriptionHelper)
     {
-        _sendGridClient = sendGridClient;
-        _config = config;
-        _jsonOptions = jsonOptions;
-        _validator = validator;
-        _sendGridContactHandler = sendGridContactHandler;
+       _subscriptionHelper = subscriptionHelper;
     }
 
     [FunctionName("NewsletterSubscriber")]
@@ -47,17 +28,10 @@ public class NewsletterSubscriber
     public async Task<IActionResult> Subscribe(
         [HttpTrigger(AuthorizationLevel.Function, "post")] HttpRequest req, ILogger _logger)
     {
-        using (_logger.BeginScope("NewsletterSubscriber"))
-        {
-            _logger.LogInformation("C# HTTP trigger function processed a request.");
-            
-            var contact = await req.Body.ConvertFrom<NewsletterContact>(_jsonOptions, _logger);
-            await contact.Validate(_validator, _logger);
-            _ = await _sendGridContactHandler.AddContactToSendGridList(contact, _logger);
-            var response = await _sendGridContactHandler.AddContactToSendGridGroup(contact,  _logger);
-
-            return new StatusCodeResult((int)response);
-        }
+        _logger.LogInformation("C# HTTP trigger function processed a request.");
+        int response = await _subscriptionHelper.SubscribeContactToSite(req.Body, _logger);
+        return new StatusCodeResult(response);
     }
+    
 }
 
