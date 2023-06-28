@@ -21,3 +21,8 @@ pnpm-debug.log*
 .DS_Store
 
 **/.vscode/
+<<<<<<< HEAD
+=======
+biceps/parameters*.json
+biceps/parameters*.json
+>>>>>>> 0132d07 (branch cleanup)
