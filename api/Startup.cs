@@ -40,7 +40,6 @@ public class Startup : FunctionsStartup
         var services = builder.Services;
         services.AddLogging();
         services.AddSendGridAzFunction(Configuration);
-<<<<<<< HEAD
 
         services.AddOptions<ApiSwaggerInfo>()
             .Bind(Configuration.GetSection(nameof(ApiSwaggerInfo)))
@@ -48,9 +47,6 @@ public class Startup : FunctionsStartup
        
        var swaggerInfo = services.BuildServiceProvider()
             .GetRequiredService<IOptions<ApiSwaggerInfo>>().Value;
-=======
-       
->>>>>>> main
         services.AddSingleton<IOpenApiConfigurationOptions>(_ =>
                             {
                                 var options = new OpenApiConfigurationOptions()
