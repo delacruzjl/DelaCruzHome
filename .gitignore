@@ -21,3 +21,6 @@ pnpm-debug.log*
 .DS_Store
 
 **/.vscode/
+biceps/parameter*.json
+
+**/*.orig

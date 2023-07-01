@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Configuration.AzureAppConfiguration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using SendGrid;
 
@@ -39,27 +40,33 @@ public class Startup : FunctionsStartup
         var services = builder.Services;
         services.AddLogging();
         services.AddSendGridAzFunction(Configuration);
+
+        services.AddOptions<ApiSwaggerInfo>()
+            .Bind(Configuration.GetSection(nameof(ApiSwaggerInfo)))
+            .ValidateDataAnnotations();
        
+       var swaggerInfo = services.BuildServiceProvider()
+            .GetRequiredService<IOptions<ApiSwaggerInfo>>().Value;
         services.AddSingleton<IOpenApiConfigurationOptions>(_ =>
                             {
                                 var options = new OpenApiConfigurationOptions()
                                 {
                                     Info = new OpenApiInfo()
                                     {
-                                        Version = "1.0.0",
-                                        Title = "Swagger Jose's SendGrid Newsletter Subscription API",
-                                        Description = "API designed by [http://delacruzhome.com](http://delacruzhome.com).",
-                                        TermsOfService = new Uri("https://github.com/delacruzjl"),
+                                        Version = swaggerInfo.Version.ToString(),
+                                        Title = swaggerInfo.Title,
+                                        Description = swaggerInfo.Description,
+                                        TermsOfService = swaggerInfo.TermsOfService,
                                         Contact = new OpenApiContact()
                                         {
-                                            Name = "Jose",
-                                            Email = Environment.GetEnvironmentVariable("SupportEmail"),
-                                            Url = new Uri("https://github.com/delacruzjl"),
+                                            Name = swaggerInfo.ApiContact.Name,
+                                            Email = swaggerInfo.ApiContact.Email,
+                                            Url = swaggerInfo.ApiContact.ContactUrl,
                                         },
                                         License = new OpenApiLicense()
                                         {
-                                            Name = "MIT",
-                                            Url = new Uri("http://opensource.org/licenses/MIT"),
+                                            Name = swaggerInfo.ApiLicense.Name,
+                                            Url = swaggerInfo.ApiLicense.Url,
                                         }
                                     },
                                     Servers = DefaultOpenApiConfigurationOptions.GetHostNames(),

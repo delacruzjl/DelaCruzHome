@@ -1,0 +1,347 @@
+{
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "$id": "http://example.com/example.json",
+    "type": "object",
+    "default": {},
+    "title": "Root Schema",
+    "required": [
+        "$schema",
+        "contentVersion",
+        "parameters"
+    ],
+    "properties": {
+        "$schema": {
+            "type": "string",
+            "default": "",
+            "title": "The $schema Schema",
+            "examples": [
+                "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#"
+            ]
+        },
+        "contentVersion": {
+            "type": "string",
+            "default": "",
+            "title": "The contentVersion Schema",
+            "examples": [
+                "1.0.0.0"
+            ]
+        },
+        "parameters": {
+            "type": "object",
+            "default": {},
+            "title": "The parameters Schema",
+            "required": [
+                "location",
+                "resource_group_name",
+                "stapp_name",
+                "app_config_name",
+                "github_repo_uri",
+                "sendGrid_Key",
+                "sendgrid_newsletterId",
+                "sendgrid_templateId",
+                "sentry_dsn",
+                "sendgrid_destination_email",
+                "owner_email_address",
+                "owner_name",
+                "sendgrid_groupId",
+                "email_subject_line"
+            ],
+            "properties": {
+                "location": {
+                    "type": "object",
+                    "default": {},
+                    "title": "The location Schema",
+                    "required": [
+                        "value"
+                    ],
+                    "properties": {
+                        "value": {
+                            "type": "string",
+                            "default": "",
+                            "title": "The value Schema",
+                            "examples": [
+                                "eastus2"
+                            ]
+                        }
+                    },
+                    "examples": [{
+                        "value": "eastus2"
+                    }]
+                },
+                "resource_group_name": {
+                    "type": "object",
+                    "default": {},
+                    "title": "The resource_group_name Schema",
+                    "required": [
+                        "value"
+                    ],
+                    "properties": {
+                        "value": {
+                            "type": "string",
+                            "default": "",
+                            "title": "The value Schema",
+                            "examples": [
+                                "rg-delacruzhome-dev-eastus-003"
+                            ]
+                        }
+                    },
+                    "examples": [{
+                        "value": "rg-delacruzhome-dev-eastus-003"
+                    }]
+                },
+                "stapp_name": {
+                    "type": "object",
+                    "default": {},
+                    "title": "The stapp_name Schema",
+                    "required": [
+                        "value"
+                    ],
+                    "properties": {
+                        "value": {
+                            "type": "string",
+                            "default": "",
+                            "title": "The value Schema",
+                            "examples": [
+                                "stapp-delacruzhome-dev-eastus2-003"
+                            ]
+                        }
+                    },
+                    "examples": [{
+                        "value": "stapp-delacruzhome-dev-eastus2-003"
+                    }]
+                },
+                "app_config_name": {
+                    "type": "object",
+                    "default": {},
+                    "title": "The app_config_name Schema",
+                    "required": [
+                        "value"
+                    ],
+                    "properties": {
+                        "value": {
+                            "type": "string",
+                            "default": "",
+                            "title": "The value Schema",
+                            "examples": [
+                                "appcs-delacruzhome-dev-eastus2"
+                            ]
+                        }
+                    },
+                    "examples": [{
+                        "value": "appcs-delacruzhome-dev-eastus2"
+                    }]
+                },
+                "github_repo_uri": {
+                    "type": "object",
+                    "default": {},
+                    "title": "The github_repo_uri Schema",
+                    "required": [
+                        "value"
+                    ],
+                    "properties": {
+                        "value": {
+                            "type": "string",
+                            "default": "",
+                            "title": "The value Schema",
+                            "examples": [
+                                "https://github.com/delacruzjl/DelaCruzHome"
+                            ]
+                        }
+                    },
+                    "examples": [{
+                        "value": "https://github.com/delacruzjl/DelaCruzHome"
+                    }]
+                },
+                "sendGrid_Key": {
+                    "type": "object",
+                    "default": {},
+                    "title": "The sendGrid_Key Schema",
+                    "required": [
+                        "value"
+                    ],
+                    "properties": {
+                        "value": {
+                            "type": "string",
+                            "default": "",
+                            "title": "The value Schema",
+                            "examples": [
+                                "ZZ.ABC"
+                            ]
+                        }
+                    },
+                    "examples": [{
+                        "value": "ZZ.ABC"
+                    }]
+                },
+                "sendgrid_newsletterId": {
+                    "type": "object",
+                    "default": {},
+                    "title": "The sendgrid_newsletterId Schema",
+                    "required": [
+                        "value"
+                    ],
+                    "properties": {
+                        "value": {
+                            "type": "string",
+                            "default": "",
+                            "title": "The value Schema",
+                            "examples": [
+                                "00000000-0000-0000-0000-000000000000"
+                            ]
+                        }
+                    },
+                    "examples": [{
+                        "value": "00000000-0000-0000-0000-000000000000"
+                    }]
+                },
+                "sendgrid_templateId": {
+                    "type": "object",
+                    "default": {},
+                    "title": "The sendgrid_templateId Schema",
+                    "required": [
+                        "value"
+                    ],
+                    "properties": {
+                        "value": {
+                            "type": "string",
+                            "default": "",
+                            "title": "The value Schema",
+                            "examples": [
+                                "X-XXXXXX..."
+                            ]
+                        }
+                    },
+                    "examples": [{
+                        "value": "X-XXXXXX..."
+                    }]
+                },
+                "sentry_dsn": {
+                    "type": "object",
+                    "default": {},
+                    "title": "The sentry_dsn Schema",
+                    "required": [
+                        "value"
+                    ],
+                    "properties": {
+                        "value": {
+                            "type": "string",
+                            "default": "",
+                            "title": "The value Schema",
+                            "examples": [
+                                "https://sentry@ingest.email/123456"
+                            ]
+                        }
+                    },
+                    "examples": [{
+                        "value": "https://sentry@ingest.email/123456"
+                    }]
+                },
+                "sendgrid_destination_email": {
+                    "type": "object",
+                    "default": {},
+                    "title": "The sendgrid_destination_email Schema",
+                    "required": [
+                        "value"
+                    ],
+                    "properties": {
+                        "value": {
+                            "type": "string",
+                            "default": "",
+                            "title": "The value Schema",
+                            "examples": [
+                                "xxx@xxx.com"
+                            ]
+                        }
+                    },
+                    "examples": [{
+                        "value": "xxx@xxx.com"
+                    }]
+                },
+                "owner_email_address": {
+                    "type": "object",
+                    "default": {},
+                    "title": "The owner_email_address Schema",
+                    "required": [
+                        "value"
+                    ],
+                    "properties": {
+                        "value": {
+                            "type": "string",
+                            "default": "",
+                            "title": "The value Schema",
+                            "examples": [
+                                "xxx@xxx.com"
+                            ]
+                        }
+                    },
+                    "examples": [{
+                        "value": "xxx@xxx.com"
+                    }]
+                },
+                "owner_name": {
+                    "type": "object",
+                    "default": {},
+                    "title": "The owner_name Schema",
+                    "required": [
+                        "value"
+                    ],
+                    "properties": {
+                        "value": {
+                            "type": "string",
+                            "default": "",
+                            "title": "The value Schema",
+                            "examples": [
+                                "Jose De la Cruz"
+                            ]
+                        }
+                    },
+                    "examples": [{
+                        "value": "Jose De la Cruz"
+                    }]
+                },
+                "sendgrid_groupId": {
+                    "type": "object",
+                    "default": {},
+                    "title": "The sendgrid_groupId Schema",
+                    "required": [
+                        "value"
+                    ],
+                    "properties": {
+                        "value": {
+                            "type": "string",
+                            "default": "",
+                            "title": "The value Schema",
+                            "examples": [
+                                "123456"
+                            ]
+                        }
+                    },
+                    "examples": [{
+                        "value": "123456"
+                    }]
+                },
+                "email_subject_line": {
+                    "type": "object",
+                    "default": {},
+                    "title": "The email_subject_line Schema",
+                    "required": [
+                        "value"
+                    ],
+                    "properties": {
+                        "value": {
+                            "type": "string",
+                            "default": "",
+                            "title": "The value Schema",
+                            "examples": [
+                                "DELACRUZHOME.COM: Someone is trying to reach out!"
+                            ]
+                        }
+                    },
+                    "examples": [{
+                        "value": "DELACRUZHOME.COM: Someone is trying to reach out!"
+                    }]
+                }
+            }
+        }
+    }
+}
