@@ -21,19 +21,5 @@ pnpm-debug.log*
 .DS_Store
 
 **/.vscode/
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-biceps/parameters*.json
-biceps/parameters*.json
->>>>>>> 0132d07 (branch cleanup)
-=======
-biceps/parameters*.json
-biceps/parameters*.json
-=======
->>>>>>> parent of a708416 (biceps working)
->>>>>>> dce5b3b (remove leaked apikey)
-=======
-biceps/parameters*.json
->>>>>>> 725f481 (reset branch)
+biceps/parameter*.json
+
