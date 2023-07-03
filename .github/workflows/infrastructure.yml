@@ -1,0 +1,38 @@
+name: Infrastructure with Bicep
+
+on:
+    push:
+      branches:
+        - main
+      paths:
+        - "bicep/**"
+    pull_request:
+      types: [opened, synchronize, reopened, closed]
+      branches:
+        - main
+      paths:
+        - "bicep/**"
+  
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+  
+      # Checkout code
+    - uses: actions/checkout@main
+  
+      # Log into Azure
+    - uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+  
+      # Deploy Bicep file
+    - name: deploy
+      uses: azure/arm-deploy@v1
+      with:
+        subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
+        resourceGroupName: ${{ secrets.AZURE_RG }}
+        template: ./biceps/main.bicep
+        parameters: sendgrid_prod_ApiKey=${{ secrets.SENDGRID_PROD_APIKEY }} sendgrid_dev_ApiKey=${{ secrets.SENDGRID_DEV_APIKEY }} sendgrid_prod_email=${{ secrets.SENDGRID_PROD_EMAIL  }} sendgrid_dev_email=${{ secrets.SENDGRID_DEV_EMAIL }} sendgrid_prod_templateId=${{ secrets.SENDGRID_PROD_TEMPLATEID  }} sendgrid_dev_templateId=${{ secrets.SENDGRID_DEV_TEMPLATEID }} sentry_dsn=${{ secrets.SENTRY_DSN }}
+        failOnStdErr: false
+  

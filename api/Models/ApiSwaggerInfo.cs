@@ -4,6 +4,9 @@ using System.ComponentModel.DataAnnotations;
 namespace Api;
 
 public class ApiSwaggerInfo {
+    public const string TestFunctionApiKey = "apikeyquery_auth";
+    public const string TestFunctionApiHeaderName = "x-functions-key";
+
     [Required]
     public Version Version { get; set; }
     [Required]
