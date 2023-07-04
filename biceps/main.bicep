@@ -70,7 +70,6 @@ module stappconfig 'static-webapp-config.bicep' = {
 }
 
 module settings 'app-settings-array.bicep' = {
-  scope: resourceGroup(resource_group_name)
   name: 'settings'
   params: {
     resource_group_name: resource_group_name

@@ -1,4 +1,8 @@
 using System;
+using System.IO;
+using Api.ConfigureOptions;
+using Api.Validators;
+using FluentValidation;
 using Jodelac.SendGridAzFunction.Extensions;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Abstractions;
@@ -24,7 +28,9 @@ public class Startup : FunctionsStartup
     {
         string cs = Environment.GetEnvironmentVariable("connectionString");
         var environment = Environment.GetEnvironmentVariable("environment");
-        builder.ConfigurationBuilder.AddAzureAppConfiguration(options => {
+
+        builder.ConfigurationBuilder
+        .AddAzureAppConfiguration(options => {
             options.Connect(cs)
                 .Select(KeyFilter.Any, LabelFilter.Null);
             
@@ -39,11 +45,10 @@ public class Startup : FunctionsStartup
         Configuration = builder.GetContext().Configuration;
         var services = builder.Services;
         services.AddLogging();
-        services.AddSendGridAzFunction(Configuration);
+        services.AddValidatorsFromAssemblyContaining<SwaggerInfoValidator>();
 
-        services.AddOptions<ApiSwaggerInfo>()
-            .Bind(Configuration.GetSection(nameof(ApiSwaggerInfo)))
-            .ValidateDataAnnotations();
+        services.AddSendGridAzFunction(Configuration);
+        services.ConfigureOptions<SwaggerInfoOptionSetup>();            
        
        var swaggerInfo = services.BuildServiceProvider()
             .GetRequiredService<IOptions<ApiSwaggerInfo>>().Value;
@@ -61,7 +66,7 @@ public class Startup : FunctionsStartup
                                         {
                                             Name = swaggerInfo.ApiContact.Name,
                                             Email = swaggerInfo.ApiContact.Email,
-                                            Url = swaggerInfo.ApiContact.ContactUrl,
+                                            Url = swaggerInfo.ApiContact.Url,
                                         },
                                         License = new OpenApiLicense()
                                         {
