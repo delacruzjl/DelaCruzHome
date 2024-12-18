@@ -16,7 +16,7 @@
     "@storyblok/astro": "^2.3.1",
     "@types/react": "^18.2.7",
     "@types/react-dom": "^18.2.4",
-    "astro": "^2.5.0",
+    "astro": "^4.16.17",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.44.3",
